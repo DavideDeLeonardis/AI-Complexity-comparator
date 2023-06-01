@@ -6,9 +6,12 @@ interface TextareaProps {
 }
 
 const Textarea = ({ onChange, onKeyDown }: TextareaProps): ReactElement => {
+   window.onload = () => document.getElementById('textarea')?.focus();
+
    return (
       <div className="input-container">
          <textarea
+            id="textarea"
             placeholder="Insert function to compare"
             onChange={onChange}
             onKeyDown={onKeyDown}

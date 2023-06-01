@@ -10,10 +10,12 @@ const App = (): ReactElement => {
    const [funcTwo, setFuncTwo] = useState<string>('');
 
    const compareFunctions = (): void => {
-      if (funcOne === '' || funcTwo === '') return;
+      const functionsAreInvalid = funcOne === '' || funcTwo === '';
 
       try {
-         // if ('exeption case') throw new Error();
+         if (functionsAreInvalid) throw new Error();
+         setFunctionsNotValid(false);
+
          console.log(funcOne);
          console.log(funcTwo);
       } catch (error) {
@@ -44,11 +46,11 @@ const App = (): ReactElement => {
             />
          </div>
 
-         <button onClick={compareFunctions}>Compare</button>
-
          {functionsNotValid && (
             <div style={{ color: 'red' }}>Insert valid functions.</div>
          )}
+
+         <button onClick={compareFunctions}>Compare</button>
       </>
    );
 };
