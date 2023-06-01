@@ -1,8 +1,6 @@
-import { ReactElement, useState } from 'react';
+import { ReactElement, useState, ChangeEvent, KeyboardEvent } from 'react';
 
 import Textarea from './components/textarea';
-
-import { textareaChangeEvent } from './types';
 
 import './assets/scss/index.scss';
 
@@ -12,6 +10,8 @@ const App = (): ReactElement => {
    const [funcTwo, setFuncTwo] = useState<string>('');
 
    const compareFunctions = (): void => {
+      if (funcOne === '' || funcTwo === '') return;
+
       try {
          // if ('exeption case') throw new Error();
          console.log(funcOne);
@@ -21,22 +21,31 @@ const App = (): ReactElement => {
       }
    };
 
-   const setTextareaValueONE = (e: textareaChangeEvent): void =>
+   const handleFuncOneChange = (e: ChangeEvent<HTMLTextAreaElement>): void =>
       setFuncOne(e.target.value);
 
-   const setTextareaValueTWO = (e: textareaChangeEvent): void =>
+   const handleFuncTwoChange = (e: ChangeEvent<HTMLTextAreaElement>): void =>
       setFuncTwo(e.target.value);
+
+   const handleKeyPress = (e: KeyboardEvent): void | null =>
+      (e.metaKey || e.ctrlKey) && e.key === 'Enter' ? compareFunctions() : null;
 
    return (
       <>
          <h1>Complexity Comparator</h1>
          <div className="inputs-container">
-            <Textarea onTextareaChangeValue={setTextareaValueONE} />
-            <Textarea onTextareaChangeValue={setTextareaValueTWO} />
+            <Textarea
+               onChange={handleFuncOneChange}
+               onKeyDown={handleKeyPress}
+            />
+            <Textarea
+               onChange={handleFuncTwoChange}
+               onKeyDown={handleKeyPress}
+            />
          </div>
 
          <button onClick={compareFunctions}>Compare</button>
-			
+
          {functionsNotValid && (
             <div style={{ color: 'red' }}>Insert valid functions.</div>
          )}

@@ -1,17 +1,17 @@
-import { ReactElement } from 'react';
+import { ReactElement, ChangeEvent, KeyboardEvent } from 'react';
 
-import { textareaChangeEvent } from '../types';
+interface TextareaProps {
+   onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+   onKeyDown: (e: KeyboardEvent<HTMLTextAreaElement>) => void | null;
+}
 
-const Textarea = ({
-   onTextareaChangeValue,
-}: {
-   onTextareaChangeValue: (e: textareaChangeEvent) => void;
-}): ReactElement => {
+const Textarea = ({ onChange, onKeyDown }: TextareaProps): ReactElement => {
    return (
       <div className="input-container">
          <textarea
             placeholder="Insert function to compare"
-            onChange={onTextareaChangeValue}
+            onChange={onChange}
+            onKeyDown={onKeyDown}
          ></textarea>
       </div>
    );
