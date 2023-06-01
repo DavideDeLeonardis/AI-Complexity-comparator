@@ -1,47 +1,65 @@
-import { ReactElement, useState, ChangeEvent, KeyboardEvent } from 'react';
+import {
+   ReactElement,
+   useState,
+   useEffect,
+   useRef,
+   KeyboardEvent,
+} from 'react';
 
-import Textarea from './components/textarea';
+import Textarea from './components/Textarea';
+import useOpenAI from './hooks/useOpenAI';
+import { OpenAIProps } from './types';
 
 import './assets/scss/index.scss';
 
 const App = (): ReactElement => {
-   const [functionsNotValid, setFunctionsNotValid] = useState<boolean>(false);
-   const [funcOne, setFuncOne] = useState<string>('');
+	const [funcOne, setFuncOne] = useState<string>('');
    const [funcTwo, setFuncTwo] = useState<string>('');
+   const [functionsNotValid, setFunctionsNotValid] = useState<boolean>(false);
+   const [isLoading, setIsLoading] = useState<boolean>(false);
+   const [response, setResponse] = useState<string>('');
 
-   const compareFunctions = (): void => {
+   // Focus textarea when the page loads
+   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+   useEffect(() => textAreaRef.current?.focus(), []);
+
+   // Accessibility on {{ Command / Control + Enter }} keys press
+   const handleKeyPress = (e: KeyboardEvent): null | void =>
+      (e.metaKey || e.ctrlKey) && e.key === 'Enter'
+         ? handleCompareFunctions()
+         : null;
+
+   const handleCompareFunctions = (): void => {
       const functionsAreInvalid = funcOne === '' || funcTwo === '';
 
       try {
          if (functionsAreInvalid) throw new Error();
          setFunctionsNotValid(false);
 
-         console.log(funcOne);
-         console.log(funcTwo);
+         compareFunctions();
       } catch (error) {
          setFunctionsNotValid(true);
       }
    };
 
-   const handleFuncOneChange = (e: ChangeEvent<HTMLTextAreaElement>): void =>
-      setFuncOne(e.target.value);
-
-   const handleFuncTwoChange = (e: ChangeEvent<HTMLTextAreaElement>): void =>
-      setFuncTwo(e.target.value);
-
-   const handleKeyPress = (e: KeyboardEvent): void | null =>
-      (e.metaKey || e.ctrlKey) && e.key === 'Enter' ? compareFunctions() : null;
+   const compareFunctions = useOpenAI({
+      funcOne,
+      funcTwo,
+      setResponse,
+      setIsLoading,
+   } as OpenAIProps);
 
    return (
       <>
-         <h1>Complexity Comparator</h1>
+         <h1>Algorithms Complexity Comparator</h1>
          <div className="inputs-container">
             <Textarea
-               onChange={handleFuncOneChange}
+               onChange={(e) => setFuncOne(e.target.value)}
                onKeyDown={handleKeyPress}
+               innerRef={textAreaRef}
             />
             <Textarea
-               onChange={handleFuncTwoChange}
+               onChange={(e) => setFuncTwo(e.target.value)}
                onKeyDown={handleKeyPress}
             />
          </div>
@@ -50,7 +68,11 @@ const App = (): ReactElement => {
             <div style={{ color: 'red' }}>Insert valid functions.</div>
          )}
 
-         <button onClick={compareFunctions}>Compare</button>
+         <button onClick={handleCompareFunctions}>Compare</button>
+
+         <div>{isLoading && 'Loading...'}</div>
+
+         <div>{response}</div>
       </>
    );
 };

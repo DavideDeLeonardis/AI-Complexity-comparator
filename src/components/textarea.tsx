@@ -1,22 +1,23 @@
-import { ReactElement, ChangeEvent, KeyboardEvent } from 'react';
+import { ReactElement, ChangeEvent, KeyboardEvent, RefObject } from 'react';
 
 interface TextareaProps {
    onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
    onKeyDown: (e: KeyboardEvent<HTMLTextAreaElement>) => void | null;
+   innerRef?: RefObject<HTMLTextAreaElement>;
 }
 
-const Textarea = ({ onChange, onKeyDown }: TextareaProps): ReactElement => {
-   window.onload = () => document.getElementById('textarea')?.focus();
-
+const Textarea = ({
+   onChange,
+   onKeyDown,
+   innerRef,
+}: TextareaProps): ReactElement => {
    return (
-      <div className="input-container">
-         <textarea
-            id="textarea"
-            placeholder="Insert function to compare"
-            onChange={onChange}
-            onKeyDown={onKeyDown}
-         ></textarea>
-      </div>
+      <textarea
+         placeholder="Insert function to compare"
+         ref={innerRef}
+         onChange={onChange}
+         onKeyDown={onKeyDown}
+      ></textarea>
    );
 };
 
