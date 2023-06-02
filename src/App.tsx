@@ -8,7 +8,7 @@ import {
 
 import Textarea from './components/Textarea';
 import useOpenAI from './hooks/useOpenAI';
-import { OpenAIProps } from './types';
+import { OpenAIProps } from './interfaces';
 
 import './assets/scss/index.scss';
 

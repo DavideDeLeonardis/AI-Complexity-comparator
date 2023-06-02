@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Configuration, OpenAIApi } from 'openai';
 
-import { OpenAIProps } from '../types';
+import { OpenAIProps } from '../interfaces';
 
 const useOpenAI = ({
    prompt,

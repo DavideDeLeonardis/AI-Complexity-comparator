@@ -1,14 +1,6 @@
-import { ReactElement, ChangeEvent, KeyboardEvent, RefObject } from 'react';
+import { ReactElement } from 'react';
 
-interface TextareaProps {
-   complexity: string;
-   isLoading: boolean;
-   onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
-   onKeyDown: (
-      e: KeyboardEvent<HTMLTextAreaElement>
-   ) => Promise<void> | null | undefined;
-   innerRef?: RefObject<HTMLTextAreaElement>;
-}
+import { TextareaProps } from '../interfaces';
 
 const Textarea = ({
    onChange,
