@@ -15,87 +15,47 @@ import './assets/scss/index.scss';
 const App = (): ReactElement => {
    const [funcOne, setFuncOne] = useState<string>('');
    const [funcTwo, setFuncTwo] = useState<string>('');
+   const [response, setResponse] = useState<string>('');
    const [functionsNotValid, setFunctionsNotValid] = useState<boolean>(false);
-
-   const [complexityFuncOne, setComplexityFuncOne] = useState<string>('');
-   const [, setFuncOneIsLoading] = useState<boolean>(false);
-
-   const [complexityFuncTwo, setComplexityFuncTwo] = useState<string>('');
-   const [, setFuncTwoIsLoading] = useState<boolean>(false);
-
-   const [whosFaster, setWhosFaster] = useState<string>('');
-   const [, setWhoFasterIsLoading] = useState<boolean>(false);
-
-   const [isLoading, setAllIsLoading] = useState<boolean>(false);
+   const [isLoading, setIsLoading] = useState<boolean>(false);
 
    // Focus textarea when the page loads
    const textAreaRef = useRef<HTMLTextAreaElement>(null);
    useEffect(() => textAreaRef.current?.focus(), []);
 
    // compareFunctions() as accessibility on {{ Command / Control + Enter }} keys press
-   const handleKeyPress = (
-      e: KeyboardEvent
-   ): Promise<void> | null | undefined => {
+   const handleKeyPress = (e: KeyboardEvent): void | null => {
       if (isLoading) return;
       (e.metaKey || e.ctrlKey) && e.key === 'Enter' ? compareFunctions() : null;
    };
 
-   const getPrompt = (func: string) => `
-		Act like an experienced and concise software engineer. Your job is to determine the time complexity of a function. 
-		Output only the time complexity of the function in this format: " {{ complexityOfTheFunction }} ".
-		Instead of {{ complexityOfTheFunction }} write the actual complexity of the functions inserted.
-		IF is not a function output ONLY " NOT A FUNCTION ".
-		Remember, output ONLY what's in the double quotes of the format.
-		The function is: ${func}		
-	`;
-
-   const { getHelp: handleComplexityFuncOne } = useOpenAI({
-      prompt: getPrompt(funcOne),
-      setResponse: setComplexityFuncOne,
-      setIsLoadingCallback: setFuncOneIsLoading,
-   } as OpenAIProps);
-
-   const { getHelp: handleComplexityFuncTwo } = useOpenAI({
-      prompt: getPrompt(funcTwo),
-      setResponse: setComplexityFuncTwo,
-      setIsLoadingCallback: setFuncTwoIsLoading,
-   } as OpenAIProps);
-
-   const { getHelp: handleWhosFaster } = useOpenAI({
-      prompt: `
-			Act like a software engineer. Your job is to compare the time complexity of two functions. 
-			Output, depending on which function is faster, ONLY in this format:
-			" Function {{ nameOfTheFunction }} is faster ".
-			Instead of {{ nameOfTheFunction }} write actual name of the function inserted.
-			IF is not a function output ONLY " NOT A FUNCTION ".
-			Remember, output ONLY what's the double quotes of the format.
-			The two functions are ${funcOne} and ${funcTwo}
-		`,
-      setResponse: setWhosFaster,
-      setIsLoadingCallback: setWhoFasterIsLoading,
-   } as OpenAIProps);
-
-   const compareFunctions = async () => {
+   const compareFunctions = (): void => {
       if (isLoading) return;
 
       try {
          if (funcOne === '' || funcTwo === '') throw new Error();
          setFunctionsNotValid(false);
 
-         setAllIsLoading(true);
-
-         await Promise.all([
-            handleComplexityFuncOne(),
-            handleComplexityFuncTwo(),
-            handleWhosFaster(),
-         ]);
-
-         setAllIsLoading(false);
+         getHelp();
       } catch (error) {
          setFunctionsNotValid(true);
-         setAllIsLoading(false);
+         setIsLoading(false);
       }
    };
+
+   const getHelp = useOpenAI({
+      prompt: `
+			Act like an experienced software engineer. Your job is to determine the time complexities of two functions and determine which one is faster. 
+			Output results in a JS object having as keys the names of the functions and for values another object having the format: 'complexity: {{ complexityOfTheFunction }}', 'isFaster: {{ isFaster }}'.
+			Instead of {{ complexityOfTheFunction }} write the actual string complexity of the functions inserted.
+			Instead of {{ isFaster }} write a boolean determined by which function is faster, ad example if function one is faster write true.
+			Remember, output ONLY the JS object.
+			IF one of the function inserted is not a function output ONLY " NOT A FUNCTION " as a string.
+			The functions are: ${funcOne} and ${funcTwo}
+		`,
+      setResponse,
+      setIsLoading,
+   } as OpenAIProps);
 
    return (
       <>
@@ -104,14 +64,14 @@ const App = (): ReactElement => {
             <Textarea
                onChange={(e) => setFuncOne(e.target.value)}
                onKeyDown={handleKeyPress}
-               complexity={complexityFuncOne.replace(/^"(.*)"$/, '$1')}
+               complexity={''}
                isLoading={isLoading}
                innerRef={textAreaRef}
             />
             <Textarea
                onChange={(e) => setFuncTwo(e.target.value)}
                onKeyDown={handleKeyPress}
-               complexity={complexityFuncTwo.replace(/^"(.*)"$/, '$1')}
+               complexity={''}
                isLoading={isLoading}
             />
          </div>
@@ -122,7 +82,7 @@ const App = (): ReactElement => {
 
          <button onClick={compareFunctions}>Compare</button>
 
-         <div>{isLoading ? 'Loading...' : whosFaster}</div>
+         <div>{isLoading ? 'Loading...' : response}</div>
       </>
    );
 };
