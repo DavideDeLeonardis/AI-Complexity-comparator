@@ -4,7 +4,7 @@ import { OpenAIProps } from '../interfaces';
 
 const useOpenAI = ({
    functionsInserted,
-   setResponse,
+   setResponseString,
    setIsLoading,
 }: OpenAIProps): (() => void) => {
    const configuration = new Configuration({
@@ -17,7 +17,7 @@ const useOpenAI = ({
    const getHelp = async (): Promise<void> => {
       const { funcOne, funcTwo } = functionsInserted;
       setIsLoading(true);
-      setResponse('');
+      setResponseString('')
 
       try {
          const response = await openai.createChatCompletion({
@@ -39,9 +39,9 @@ const useOpenAI = ({
          });
 
          const content = response.data.choices?.[0]?.message?.content;
-         if (content) setResponse(content);
+         if (content) setResponseString(content);
       } catch (e) {
-         setResponse('');
+         setResponseString('')
          console.warn(e);
       } finally {
          setIsLoading(false);
