@@ -7,8 +7,8 @@ import {
 } from 'react';
 
 export interface OpenAIProps {
-   setResponse: Dispatch<SetStateAction<string>>;
-   prompt: string;
+   functionsInserted: { funcOne: string; funcTwo: string };
+   setResponseString: Dispatch<SetStateAction<string>>;
    setIsLoading: Dispatch<SetStateAction<boolean>>;
 }
 

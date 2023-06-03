@@ -15,7 +15,7 @@ import './assets/scss/index.scss';
 const App = (): ReactElement => {
    const [funcOne, setFuncOne] = useState<string>('');
    const [funcTwo, setFuncTwo] = useState<string>('');
-   const [response, setResponse] = useState<string>('');
+   const [responseString, setResponseString] = useState<string>('');
    const [functionsNotValid, setFunctionsNotValid] = useState<boolean>(false);
    const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -44,16 +44,8 @@ const App = (): ReactElement => {
    };
 
    const getHelp = useOpenAI({
-      prompt: `
-			Act like an experienced software engineer. Your job is to determine the time complexities of two functions and determine which one is faster. 
-			Output results in a JS object having as keys the names of the functions and for values another object having the format: 'complexity: {{ complexityOfTheFunction }}', 'isFaster: {{ isFaster }}'.
-			Instead of {{ complexityOfTheFunction }} write the actual string complexity of the functions inserted.
-			Instead of {{ isFaster }} write a boolean determined by which function is faster, ad example if function one is faster write true.
-			Remember, output ONLY the JS object.
-			IF one of the function inserted is not a function output ONLY " NOT A FUNCTION " as a string.
-			The functions are: ${funcOne} and ${funcTwo}
-		`,
-      setResponse,
+      functionsInserted: { funcOne, funcTwo },
+      setResponseString,
       setIsLoading,
    } as OpenAIProps);
 
@@ -82,7 +74,7 @@ const App = (): ReactElement => {
 
          <button onClick={compareFunctions}>Compare</button>
 
-         <div>{isLoading ? 'Loading...' : response}</div>
+         <div>{isLoading ? 'Loading...' : responseString}</div>
       </>
    );
 };
