@@ -9,26 +9,26 @@ import {
 import Textarea from './components/Textarea';
 import Select from './components/Select';
 import useOpenAI from './hooks/useOpenAI';
-import { convertResponseInArray } from './utils';
+import { isFunction, convertResponseInArray } from './utils';
 import { OpenAIProps } from './interfaces';
 
 import './assets/scss/index.scss';
 
-type FinalResults =
-   | {
-        isFunction: boolean;
-        name: string;
-        complexity: string;
-        isFaster: boolean;
-     }[]
-   | unknown;
+type FunctionInserted = {
+   isFunction: boolean;
+   name: string;
+   complexity: string;
+   isFaster: boolean;
+};
+
+type FinalResponse = FunctionInserted[] | string | null;
 
 const App = (): ReactElement => {
    const [language, setLanguage] = useState<string>('');
    const [funcOne, setFuncOne] = useState<string>('');
    const [funcTwo, setFuncTwo] = useState<string>('');
    const [rawResponse, setRawResponse] = useState<string | null>(null);
-   const [finalResponse, setFinalResponse] = useState<FinalResults>(null);
+   const [finalResponse, setFinalResponse] = useState<FinalResponse>(null);
    const [inputsAreEmpty, setInputsAreEmpty] = useState<boolean>(false);
    const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -47,8 +47,15 @@ const App = (): ReactElement => {
       if (isLoading) return;
 
       try {
-         if (funcOne.trim() === '' || funcTwo.trim() === '') throw new Error();
+         const textareaNotContainsFunctions: boolean =
+            !isFunction(funcOne) || !isFunction(funcTwo);
+         const textareaAreEmpty: boolean =
+            funcOne.trim() === '' || funcTwo.trim() === '';
+
+         if (textareaAreEmpty || textareaNotContainsFunctions)
+            throw new Error();
          setInputsAreEmpty(false);
+
          await getHelp();
       } catch {
          setIsLoading(false);
@@ -67,8 +74,8 @@ const App = (): ReactElement => {
    useEffect(() => {
       if (rawResponse) {
          try {
-            const convertedResponse: FinalResults =
-               convertResponseInArray<FinalResults>(rawResponse!);
+            const convertedResponse: FinalResponse =
+               convertResponseInArray<FinalResponse>(rawResponse!);
 
             if (Array.isArray(convertedResponse))
                setFinalResponse(convertedResponse);
@@ -78,8 +85,6 @@ const App = (): ReactElement => {
          }
       }
    }, [rawResponse]);
-
-   if (finalResponse) console.log(finalResponse);
 
    return (
       <>

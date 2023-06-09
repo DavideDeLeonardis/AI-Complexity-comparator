@@ -1,5 +1,10 @@
 export const isType = <Type extends unknown>(el: any): el is Type => true;
 
+export const isFunction = (s: string): boolean => {
+   const regex = /(function|func|def|const|let|...)\s+\w+\s*\([^)]*\)\s*{[^}]*}/;
+   return regex.test(s);
+};
+
 export const convertResponseInArray = <T>(res: string): T | null => {
    const match = res.match(/```([\s\S]+?)```/);
 
