@@ -7,51 +7,84 @@ import {
 } from 'react';
 
 import Textarea from './components/Textarea';
+import Select from './components/Select';
 import useOpenAI from './hooks/useOpenAI';
+import { convertResponseInArray } from './utils';
 import { OpenAIProps } from './interfaces';
 
 import './assets/scss/index.scss';
 
+type FinalResults =
+   | {
+        isFunction: boolean;
+        name: string;
+        complexity: string;
+        isFaster: boolean;
+     }[]
+   | unknown;
+
 const App = (): ReactElement => {
+   const [language, setLanguage] = useState<string>('');
    const [funcOne, setFuncOne] = useState<string>('');
    const [funcTwo, setFuncTwo] = useState<string>('');
-   const [responseString, setResponseString] = useState<string>('');
-   const [functionsNotValid, setFunctionsNotValid] = useState<boolean>(false);
+   const [rawResponse, setRawResponse] = useState<string | null>(null);
+   const [finalResponse, setFinalResponse] = useState<FinalResults>(null);
+   const [inputsAreEmpty, setInputsAreEmpty] = useState<boolean>(false);
    const [isLoading, setIsLoading] = useState<boolean>(false);
 
    // Focus textarea when the page loads
    const textAreaRef = useRef<HTMLTextAreaElement>(null);
    useEffect(() => textAreaRef.current?.focus(), []);
 
-   // compareFunctions() as accessibility on {{ Command / Control + Enter }} keys press
-   const handleKeyPress = (e: KeyboardEvent): void | null => {
+   // compareFunctions() on pressing {{ Command / Control + Enter }} keys
+   const handleKeyPress = (e: KeyboardEvent): void => {
       if (isLoading) return;
-      (e.metaKey || e.ctrlKey) && e.key === 'Enter' ? compareFunctions() : null;
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') compareFunctions();
    };
 
-   const compareFunctions = (): void => {
+   // Set initial state response
+   const compareFunctions = async (): Promise<void> => {
       if (isLoading) return;
 
       try {
-         if (funcOne === '' || funcTwo === '') throw new Error();
-         setFunctionsNotValid(false);
-
-         getHelp();
-      } catch (error) {
-         setFunctionsNotValid(true);
+         if (funcOne.trim() === '' || funcTwo.trim() === '') throw new Error();
+         setInputsAreEmpty(false);
+         await getHelp();
+      } catch {
          setIsLoading(false);
+         setInputsAreEmpty(true);
       }
    };
 
    const getHelp = useOpenAI({
       functionsInserted: { funcOne, funcTwo },
-      setResponseString,
+      setRawResponse,
       setIsLoading,
+      language,
    } as OpenAIProps);
+
+   // Convert initial response in array and set new state
+   useEffect(() => {
+      if (rawResponse) {
+         try {
+            const convertedResponse: FinalResults =
+               convertResponseInArray<FinalResults>(rawResponse!);
+
+            if (Array.isArray(convertedResponse))
+               setFinalResponse(convertedResponse);
+            else setFinalResponse('SOMETHING WENT WRONG');
+         } catch {
+            setFinalResponse('SOMETHING WENT WRONG');
+         }
+      }
+   }, [rawResponse]);
+
+   if (finalResponse) console.log(finalResponse);
 
    return (
       <>
          <h1>Algorithms Complexity Comparator</h1>
+         <Select onChange={(e) => setLanguage(e.target.value)} />
          <div className="inputs-container">
             <Textarea
                onChange={(e) => setFuncOne(e.target.value)}
@@ -68,13 +101,13 @@ const App = (): ReactElement => {
             />
          </div>
 
-         {functionsNotValid && (
-            <div style={{ color: 'red' }}>Insert valid functions.</div>
+         {(inputsAreEmpty || typeof finalResponse === 'string') && (
+            <div style={{ color: 'red' }}>Insert 2 valid functions.</div>
          )}
 
          <button onClick={compareFunctions}>Compare</button>
 
-         <div>{isLoading ? 'Loading...' : responseString}</div>
+         <div>{isLoading && 'Loading...'}</div>
       </>
    );
 };
