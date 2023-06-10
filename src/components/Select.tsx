@@ -1,7 +1,7 @@
 import { SelectProps } from '../interfaces';
 
 const Select = ({ onChange }: SelectProps) => {
-   const options = [
+   const optionsList = [
       'Python',
       'C',
       'C++',
@@ -27,7 +27,6 @@ const Select = ({ onChange }: SelectProps) => {
       'Fortran',
       'COBOL',
       'Lisp',
-      'Ada',
       'Dart',
       'Scala',
       'PL/SQL',
@@ -35,14 +34,16 @@ const Select = ({ onChange }: SelectProps) => {
       'Powershell',
    ];
 
+   const options = optionsList.map((option, key) => (
+      <option key={key}>{option}</option>
+   ));
+
    return (
       <div className="select-container">
          <label>Choose language</label>
-         <select onChange={onChange}>
-            <option selected>Select language</option>
-            {options.map((option, key) => (
-               <option key={key}>{option}</option>
-            ))}
+         <select onChange={onChange} defaultValue={'Select language'}>
+            <option disabled>Select language</option>
+            {options}
          </select>
       </div>
    );

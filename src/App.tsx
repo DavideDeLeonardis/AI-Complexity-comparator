@@ -4,12 +4,14 @@ import {
    useEffect,
    useRef,
    KeyboardEvent,
+   // Dispatch,
+   // SetStateAction,
 } from 'react';
 
 import Textarea from './components/Textarea';
 import Select from './components/Select';
 import useOpenAI from './hooks/useOpenAI';
-import { isFunction, convertResponseInArray } from './utils';
+import { isLiteralFunction, convertResponseInArray } from './utils';
 import { OpenAIProps } from './interfaces';
 
 import './assets/scss/index.scss';
@@ -48,7 +50,7 @@ const App = (): ReactElement => {
 
       try {
          const textareaNotContainsFunctions: boolean =
-            !isFunction(funcOne) || !isFunction(funcTwo);
+            !isLiteralFunction(funcOne) || !isLiteralFunction(funcTwo);
          const textareaAreEmpty: boolean =
             funcOne.trim() === '' || funcTwo.trim() === '';
 
@@ -70,7 +72,7 @@ const App = (): ReactElement => {
       language,
    } as OpenAIProps);
 
-   // Convert initial response in array and set new state
+   // Convert initial raw response in [] and set new state
    useEffect(() => {
       if (rawResponse) {
          try {
@@ -85,6 +87,24 @@ const App = (): ReactElement => {
          }
       }
    }, [rawResponse]);
+
+   // const textareaElements = (setFunc: Dispatch<SetStateAction<string>>) => {
+   //    // for (const { isFunction, name, complexity, isFaster } of finalResponse as []) {}
+   //    (finalResponse as []).map(
+   //       ({ isFunction, name, complexity, isFaster }, key) => (
+   //          <>
+   //             <Textarea
+   //                key={key}
+   //                onChange={(e) => setFunc(e.target.value)}
+   //                onKeyDown={handleKeyPress}
+   //                complexity={complexity}
+   //                isLoading={isLoading}
+   //                innerRef={textAreaRef}
+   //             />
+   //          </>
+   //       )
+   //    );
+   // };
 
    return (
       <>
