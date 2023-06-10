@@ -1,7 +1,8 @@
-export const isType = <Type extends unknown>(el: any): el is Type => true;
+export const isType = <T>(el: any): el is T => true;
 
 export const isLiteralFunction = (s: string): boolean => {
-   const regex = /(function|func|def|const|let|...)\s+\w+\s*\([^)]*\)\s*{[^}]*}/;
+   const regex =
+      /(function|func|def|const|let|...)\s+\w+\s*\([^)]*\)\s*{[^}]*}/;
    return regex.test(s);
 };
 
