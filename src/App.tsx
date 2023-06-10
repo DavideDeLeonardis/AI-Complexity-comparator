@@ -11,7 +11,7 @@ import {
 import Textarea from './components/Textarea';
 import Select from './components/Select';
 import useOpenAI from './hooks/useOpenAI';
-import { isLiteralFunction, convertResponseInArray } from './utils';
+import { hasFunctionConstruct, convertResponseInArray } from './utils';
 import { OpenAIProps } from './interfaces';
 
 import './assets/scss/index.scss';
@@ -50,7 +50,7 @@ const App = (): ReactElement => {
 
       try {
          const textareaNotContainsFunctions: boolean =
-            !isLiteralFunction(funcOne) || !isLiteralFunction(funcTwo);
+            !hasFunctionConstruct(funcOne) || !hasFunctionConstruct(funcTwo);
          const textareaAreEmpty: boolean =
             funcOne.trim() === '' || funcTwo.trim() === '';
 

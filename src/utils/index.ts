@@ -1,6 +1,6 @@
 export const isType = <T>(el: any): el is T => true;
 
-export const isLiteralFunction = (s: string): boolean => {
+export const hasFunctionConstruct = (s: string): boolean => {
    const regex =
       /(function|func|def|const|let|...)\s+\w+\s*\([^)]*\)\s*{[^}]*}/;
    return regex.test(s);
