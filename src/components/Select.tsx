@@ -1,6 +1,6 @@
 import { SelectProps } from '../interfaces';
 
-const Select = ({ onChange }: SelectProps) => {
+const Select = ({ onChange, innerRef }: SelectProps) => {
    const optionsList = [
       'Python',
       'C',
@@ -41,7 +41,7 @@ const Select = ({ onChange }: SelectProps) => {
    return (
       <div className="select-container">
          <label>Choose language</label>
-         <select onChange={onChange} defaultValue={'Select language'}>
+         <select onChange={onChange} defaultValue={'Select language'} ref={innerRef}>
             <option disabled>Select language</option>
             {options}
          </select>

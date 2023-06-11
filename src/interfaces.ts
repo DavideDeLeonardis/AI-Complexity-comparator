@@ -8,6 +8,7 @@ import {
 
 export interface SelectProps {
    onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
+	innerRef?: RefObject<HTMLSelectElement>;
 }
 
 export interface TextareaProps {
