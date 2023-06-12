@@ -24,3 +24,22 @@ export const convertResponseInArray = <T>(res: string): T | null => {
 
    return null;
 };
+
+export const convertISValuesToBoolean = <T>(arr: T | null): T | void => {
+   if (arr === null) return;
+
+   if (Array.isArray(arr))
+      arr.forEach(
+         (obj: {
+            isFunction: string | boolean;
+            isFaster: string | boolean;
+         }) => {
+            if (typeof obj.isFunction === 'string')
+               obj.isFunction = obj.isFunction === 'true';
+            if (typeof obj.isFaster === 'string')
+               obj.isFaster = obj.isFaster === 'true';
+         }
+      );
+
+   return arr;
+};

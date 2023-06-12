@@ -9,7 +9,11 @@ import {
 import Textarea from './components/Textarea';
 import Select from './components/Select';
 import useOpenAI from './hooks/useOpenAI';
-import { hasFunctionConstruct, convertResponseInArray } from './utils';
+import {
+   hasFunctionConstruct,
+   convertResponseInArray,
+   convertISValuesToBoolean,
+} from './utils';
 import { OpenAIProps } from './interfaces';
 
 import './assets/scss/index.scss';
@@ -28,7 +32,7 @@ const App = (): ReactElement => {
    const [funcOne, setFuncOne] = useState<string>('');
    const [funcTwo, setFuncTwo] = useState<string>('');
    const [rawResponse, setRawResponse] = useState<string | null>(null);
-   const [finalResponse, setFinalResponse] = useState<FinalResponse>([]);
+   const [finalResponse, setFinalResponse] = useState<FinalResponse>(null);
    const [inputsAreEmpty, setInputsAreEmpty] = useState<boolean>(false);
    const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -49,7 +53,7 @@ const App = (): ReactElement => {
 
       try {
          checkInputsValidity();
-         setFinalResponse('');
+         setFinalResponse(null);
 
          await useOpenAI({
             functionsInserted: { funcOne, funcTwo },
@@ -80,19 +84,13 @@ const App = (): ReactElement => {
       if (rawResponse)
          try {
             const convertedResponse: FinalResponse =
-               convertResponseInArray<FinalResponse>(rawResponse!);
+               convertResponseInArray<FinalResponse>(rawResponse);
 
             console.log('RAW: ', rawResponse);
             console.log('CONVERTED: ', convertedResponse);
 
             if (Array.isArray(convertedResponse)) {
-               convertedResponse.forEach((obj: FunctionInserted) => {
-                  if (typeof obj.isFunction === 'string')
-                     obj.isFunction = Boolean(obj.isFunction);
-                  if (typeof obj.isFaster === 'string')
-                     obj.isFaster = Boolean(obj.isFaster);
-               });
-
+               convertISValuesToBoolean<FinalResponse>(convertedResponse);
                setFinalResponse(convertedResponse);
             } else {
                throw new Error('Parsing in array error');
@@ -105,14 +103,17 @@ const App = (): ReactElement => {
          }
    }, [rawResponse]);
 
+   // Extract FunctionInserted objects and check types
    const [funcOneObj, funcTwoObj] = (() => {
       try {
-         return finalResponse as FunctionInserted[];
+         if (finalResponse !== null && Array.isArray(finalResponse))
+            return finalResponse as FunctionInserted[];
+         else return [] as FunctionInserted[];
       } catch {
          return [] as FunctionInserted[];
       }
    })();
-   console.log(funcOneObj, funcTwoObj); //
+   finalResponse && console.log(funcOneObj, funcTwoObj);
 
    return (
       <>
@@ -144,7 +145,9 @@ const App = (): ReactElement => {
             <div style={{ color: 'red' }}>Insert 2 valid functions.</div>
          )}
          {finalResponse === 'SOMETHING WENT WRONG' && (
-            <div style={{ color: 'red' }}>Something went wrong.</div>
+            <div style={{ color: 'red' }}>
+               Something went wrong. RETRY or check language inserted.
+            </div>
          )}
 
          <button onClick={validateAndCompareFunctions}>Compare</button>
