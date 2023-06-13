@@ -10,6 +10,7 @@ import Select from './Select';
 import Textarea from './Textarea';
 import ErrorMessage from './ErrorMessage';
 import Loading from './Loading';
+
 import useOpenAI from '../hooks/useOpenAI';
 import {
    checkInputsAreValid,
@@ -17,8 +18,8 @@ import {
    convertISValuesToBoolean,
 } from '../utils';
 import {
-   FinalResponse,
    FunctionInserted,
+   FinalResponse,
    OpenAIProps,
 } from '../types-interfaces';
 
