@@ -1,35 +1,33 @@
-import { SelectProps } from '../interfaces';
+import { ReactElement, ChangeEvent, RefObject } from 'react';
 
-const Select = ({ onChange, innerRef }: SelectProps) => {
+interface SelectProps {
+   onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
+   innerRef?: RefObject<HTMLSelectElement>;
+}
+
+const Select = ({ onChange, innerRef }: SelectProps): ReactElement => {
    const optionsList = [
+      'JavaScript',
+      'TypeScript',
       'Python',
+      'Java',
+      'PHP',
       'C',
       'C++',
       'C#',
-      'Java',
-      'JavaScript',
-      'TypeScript',
       'SQL',
-      'Assembly language',
-      'PHP',
       'R',
       'Go',
-      'Classic Visual Basic',
+      'Assembly',
       'MATLAB',
       'Swift',
-      'Pascal',
       'Ruby',
       'Perl',
-      'Objective-C',
       'Rust',
-      'SASS',
       'Kotlin',
-      'Fortran',
-      'COBOL',
-      'Lisp',
       'Dart',
       'Scala',
-      'PL/SQL',
+      'SQL',
       'Bash',
       'Powershell',
    ];
@@ -41,7 +39,11 @@ const Select = ({ onChange, innerRef }: SelectProps) => {
    return (
       <div className="select-container">
          <label>Choose language</label>
-         <select onChange={onChange} defaultValue={'Select language'} ref={innerRef}>
+         <select
+            onChange={onChange}
+            defaultValue={'Select language'}
+            ref={innerRef}
+         >
             <option disabled>Select language</option>
             {options}
          </select>

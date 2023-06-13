@@ -1,6 +1,12 @@
-import { ReactElement } from 'react';
+import { ReactElement, KeyboardEvent, ChangeEvent, RefObject } from 'react';
 
-import { TextareaProps } from '../interfaces';
+interface TextareaProps {
+   complexity: string;
+   isLoading: boolean;
+   onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+   onKeyDown: (e: KeyboardEvent<HTMLTextAreaElement>) => void | null;
+   innerRef?: RefObject<HTMLTextAreaElement>;
+}
 
 const Textarea = ({
    onChange,
@@ -16,7 +22,8 @@ const Textarea = ({
             ref={innerRef}
             onChange={onChange}
             onKeyDown={onKeyDown}
-         ></textarea>
+            disabled={isLoading}
+         />
          {!isLoading && <div>{complexity}</div>}
       </div>
    );

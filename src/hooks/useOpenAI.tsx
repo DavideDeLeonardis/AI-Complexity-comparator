@@ -1,6 +1,6 @@
 import { Configuration, OpenAIApi } from 'openai';
 
-import { OpenAIProps } from '../interfaces';
+import { OpenAIProps } from '../types-interfaces';
 
 const useOpenAI = ({
    functionsInserted,

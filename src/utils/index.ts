@@ -1,14 +1,5 @@
-export const isType = <T>(el: any): el is T => true;
-
-export const hasFunctionConstruct = (s: string): boolean => {
-   const regex = /\b(const|function|func|def|let)\b.*\(.*\)/;
-   // /^(async\s+)?(const|function|func|def|let|\.\.\.)\s+\w+\s*=\s*(async\s*)?\([^)]*\)\s*(?::\s*\w+)?\s*=>\s*\{[^}]*\}\s*;?$/;
-
-   return regex.test(s);
-};
-
-export const convertResponseInArray = <T>(res: string): T | null => {
-   const match = res.match(/```([\s\S]+?)```/);
+export const convertRawResponseInArray = <T>(rawResponse: string): T | null => {
+   const match = rawResponse.match(/```([\s\S]+?)```/);
 
    if (match) {
       const cleanedContent = match[1].replace(/'/g, '"');
@@ -19,8 +10,8 @@ export const convertResponseInArray = <T>(res: string): T | null => {
       } catch (error) {
          console.error('Error parsing extracted content: ', error);
       }
-   } else if (res.match(/([\s\S]+?)/))
-      return JSON.parse(res.replace(/'/g, '"'));
+   } else if (rawResponse.match(/([\s\S]+?)/))
+      return JSON.parse(rawResponse.replace(/'/g, '"'));
 
    return null;
 };
@@ -42,4 +33,26 @@ export const convertISValuesToBoolean = <T>(arr: T | null): T | void => {
       );
 
    return arr;
+};
+
+const hasFunctionConstruct = (s: string): boolean => {
+   const regex = /\b(const|function|func|def|let)\b.*\(.*\)/;
+   // /^(async\s+)?(const|function|func|def|let|\.\.\.)\s+\w+\s*=\s*(async\s*)?\([^)]*\)\s*(?::\s*\w+)?\s*=>\s*\{[^}]*\}\s*;?$/;
+
+   return regex.test(s);
+};
+
+export const checkInputsAreValid = (
+   funcOne: string,
+   funcTwo: string
+): boolean => {
+   const textareasAreEmpty: boolean =
+      funcOne.trim() === '' || funcTwo.trim() === '';
+   const textareaNotContainsFunctions: boolean =
+      !hasFunctionConstruct(funcOne) || !hasFunctionConstruct(funcTwo);
+
+   if (textareasAreEmpty || textareaNotContainsFunctions)
+      throw new Error('Inputs not valid');
+
+   return true;
 };
