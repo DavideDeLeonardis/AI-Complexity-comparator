@@ -14,11 +14,11 @@ const ErrorMessage = ({
    language,
 }: ErrorProps): ReactElement => {
    return (
-      <div style={{ color: 'red' }}>
+      <div className="error">
          {language === '' && 'Choose a language'}
          {!inputsAreValid && 'Insert 2 valid functions'}
          {finalResponse === 'SOMETHING WENT WRONG' &&
-            'Something went wrong. RETRY or check language inserted.'}
+            'Something went wrong! Check language inserted and retry.'}
       </div>
    );
 };

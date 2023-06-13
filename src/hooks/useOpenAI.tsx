@@ -12,7 +12,6 @@ const useOpenAI = ({
       organization: 'org-AlpRwR46uvQzcxDJssQbo3M7',
       apiKey: import.meta.env.VITE_OPENAI_API_KEY,
    });
-   delete configuration.baseOptions.headers['User-Agent'];
    const openai = new OpenAIApi(configuration);
 
    const getHelp = async (): Promise<void> => {
@@ -51,6 +50,7 @@ const useOpenAI = ({
          const content = response.data.choices?.[0]?.message?.content;
          if (content) setRawResponse(content);
       } catch (e) {
+         setRawResponse('SOMETHING WENT WRONG');
          console.error(e);
       } finally {
          setIsLoading(false);
