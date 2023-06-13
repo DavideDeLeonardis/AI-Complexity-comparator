@@ -16,7 +16,7 @@ const useOpenAI = ({
    const openai = new OpenAIApi(configuration);
 
    const getHelp = async (): Promise<void> => {
-      const { funcOne, funcTwo } = functionsInserted;
+      const { inputFuncOne, inputFuncTwo } = functionsInserted;
       setIsLoading(true);
       setRawResponse('');
 
@@ -41,7 +41,7 @@ const useOpenAI = ({
                {
                   content: `
 							Remember: ouput ONLY the content in the triple backticks without giving any other explanations or notes. \n
-							The functions are: ${funcOne} and ${funcTwo}
+							The functions are: ${inputFuncOne} and ${inputFuncTwo}
 						`,
                   role: 'user',
                },

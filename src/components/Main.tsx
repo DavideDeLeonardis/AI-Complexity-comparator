@@ -18,9 +18,10 @@ import {
    convertISValuesToBoolean,
 } from '../utils';
 import {
+   InputFunctionsInserted,
+   OpenAIProps,
    FunctionInserted,
    FinalResponse,
-   OpenAIProps,
 } from '../types-interfaces';
 
 const Main = (): ReactElement => {
@@ -30,8 +31,11 @@ const Main = (): ReactElement => {
    useEffect(() => textAreaRef.current?.focus(), []);
 
    const [language, setLanguage] = useState<string | null>(null);
-   const [funcOne, setFuncOne] = useState<string>('');
-   const [funcTwo, setFuncTwo] = useState<string>('');
+   const [functionsInserted, setFunctionsInserted] =
+      useState<InputFunctionsInserted>({
+         inputFuncOne: '',
+         inputFuncTwo: '',
+      });
    const [rawResponse, setRawResponse] = useState<string | null>(null);
    const [finalResponse, setFinalResponse] = useState<FinalResponse>(null);
    const [inputsAreValid, setInputsAreValid] = useState<boolean>(true);
@@ -52,11 +56,14 @@ const Main = (): ReactElement => {
       }
 
       try {
-         if (checkInputsAreValid(funcOne, funcTwo)) setInputsAreValid(true);
+         const { inputFuncOne, inputFuncTwo } = functionsInserted;
+
+         if (checkInputsAreValid(inputFuncOne, inputFuncTwo))
+            setInputsAreValid(true);
          setFinalResponse(null);
 
          await useOpenAI({
-            functionsInserted: { funcOne, funcTwo },
+            functionsInserted: { inputFuncOne, inputFuncTwo },
             setRawResponse,
             setIsLoading,
             language,
@@ -74,9 +81,6 @@ const Main = (): ReactElement => {
          try {
             const convertedResponse: FinalResponse =
                convertRawResponseInArray<FinalResponse>(rawResponse);
-
-            console.log('RAW: ', rawResponse);
-            console.log('CONVERTED: ', convertedResponse);
 
             if (Array.isArray(convertedResponse)) {
                convertISValuesToBoolean<FinalResponse>(convertedResponse);
@@ -116,16 +120,26 @@ const Main = (): ReactElement => {
 
          <div className="inputs-container">
             <Textarea
-               onChange={(e) => setFuncOne(e.target.value)}
+               onChange={(e) =>
+                  setFunctionsInserted({
+                     ...functionsInserted,
+                     inputFuncOne: e.target.value,
+                  })
+               }
                onKeyDown={handleKeyPress}
-               complexity={''}
+               complexity={funcOneObj ? funcOneObj.complexity : ''}
                isLoading={isLoading}
                innerRef={textAreaRef}
             />
             <Textarea
-               onChange={(e) => setFuncTwo(e.target.value)}
+               onChange={(e) =>
+                  setFunctionsInserted({
+                     ...functionsInserted,
+                     inputFuncTwo: e.target.value,
+                  })
+               }
                onKeyDown={handleKeyPress}
-               complexity={''}
+               complexity={funcTwoObj ? funcTwoObj.complexity : ''}
                isLoading={isLoading}
             />
          </div>
