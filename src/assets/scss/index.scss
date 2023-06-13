@@ -10,31 +10,35 @@ body {
    font-size: 100%;
 }
 
-.select-container {
-   margin: 20px 0;
+.root-container {
+   margin: 10px 20px;
 
-   label {
-      margin-right: 15px;
-   }
-}
+   .select-container {
+      margin: 20px 0;
 
-.inputs-container {
-   display: flex;
-
-   .container {
-      width: 100%;
-      text-align: center;
+      label {
+         margin-right: 15px;
+      }
    }
 
-   textarea {
-      width: 100%;
-      height: 400px;
-      padding: 5px 10px;
-      resize: none;
-      outline: none;
-   }
-}
+   .inputs-container {
+      display: flex;
 
-.error {
-   color: red;
+      .container {
+         width: 100%;
+         text-align: center;
+      }
+
+      textarea {
+         width: 100%;
+         height: 400px;
+         padding: 5px 10px;
+         resize: none;
+         outline: none;
+      }
+   }
+
+   .error {
+      color: red;
+   }
 }
