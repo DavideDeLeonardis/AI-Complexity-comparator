@@ -13,7 +13,10 @@ export type FunctionInserted = {
    isFaster: boolean | string;
 };
 
-export type FinalResponse = FunctionInserted[] | string | null;
+export type FinalResponse =
+   | [FunctionInserted, FunctionInserted]
+   | string
+   | null;
 
 /**
  *

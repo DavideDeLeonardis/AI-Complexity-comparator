@@ -60,6 +60,8 @@ const Main = (): ReactElement => {
 
          if (checkInputsAreValid(inputFuncOne, inputFuncTwo))
             setInputsAreValid(true);
+         else setInputsAreValid(false);
+
          setFinalResponse(null);
 
          await useOpenAI({
@@ -83,7 +85,16 @@ const Main = (): ReactElement => {
                convertRawResponseInArray<FinalResponse>(rawResponse);
 
             if (Array.isArray(convertedResponse)) {
-               convertISValuesToBoolean<FinalResponse>(convertedResponse);
+               convertISValuesToBoolean(convertedResponse);
+
+               if (
+                  !convertedResponse[0].isFunction ||
+                  !convertedResponse[1].isFunction
+               ) {
+                  setInputsAreValid(false);
+                  return;
+               }
+
                setFinalResponse(convertedResponse);
             } else {
                throw new Error('Parsing in array error');

@@ -3,7 +3,7 @@ import { ReactElement } from 'react';
 import { FinalResponse } from '../types-interfaces';
 
 interface ErrorProps {
-   inputsAreValid: boolean;
+   inputsAreValid: boolean | null;
    finalResponse: FinalResponse;
    language: string | null;
 }
@@ -16,7 +16,7 @@ const ErrorMessage = ({
    return (
       <div className="error">
          {language === '' && 'Choose a language'}
-         {!inputsAreValid && 'Insert 2 valid functions'}
+         {!inputsAreValid && 'Insert 2 valid functions.'}
          {finalResponse === 'SOMETHING WENT WRONG' &&
             'Something went wrong! Check language inserted and retry.'}
       </div>
