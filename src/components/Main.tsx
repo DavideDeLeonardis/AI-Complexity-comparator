@@ -49,7 +49,7 @@ const Main = (): ReactElement => {
          validateAndCompareFunctions();
    };
 
-   // Validate functions, make API call and set initial state
+   // Validate functions, make API call and set raw response (initial state)
    const validateAndCompareFunctions = async (): Promise<void> => {
       if (isLoading) return;
       if (!language) {
@@ -78,7 +78,7 @@ const Main = (): ReactElement => {
       }
    };
 
-   // Convert initial raw response in [] and set new state
+   // Check if inputs are functions, convert initial raw response in [] and set new state
    useEffect(() => {
       if (rawResponse)
          try {
@@ -108,10 +108,8 @@ const Main = (): ReactElement => {
          }
    }, [rawResponse]);
 
-   finalResponse && console.log(funcOneObj, funcTwoObj);
-
    return (
-      <>
+      <main>
          <Select
             onChange={(e) => {
                setLanguage(e.target.value);
@@ -129,7 +127,7 @@ const Main = (): ReactElement => {
                   })
                }
                onKeyDown={handleKeyPress}
-               complexity={funcOneObj ? funcOneObj.complexity : ''}
+               // complexity={funcOneObj ? funcOneObj.complexity : ''}
                isLoading={isLoading}
                innerRef={textAreaRef}
             />
@@ -141,12 +139,18 @@ const Main = (): ReactElement => {
                   })
                }
                onKeyDown={handleKeyPress}
-               complexity={funcTwoObj ? funcTwoObj.complexity : ''}
+               // complexity={funcTwoObj ? funcTwoObj.complexity : ''}
                isLoading={isLoading}
             />
          </div>
 
-         <button onClick={validateAndCompareFunctions}>Compare</button>
+         <button
+            className="compare"
+            disabled={isLoading}
+            onClick={validateAndCompareFunctions}
+         >
+            Compare
+         </button>
 
          <ErrorMessage
             inputsAreValid={inputsAreValid}
@@ -155,7 +159,7 @@ const Main = (): ReactElement => {
          />
 
          <Loading isLoading={isLoading} />
-      </>
+      </main>
    );
 };
 

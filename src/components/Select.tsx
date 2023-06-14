@@ -38,7 +38,7 @@ const Select = ({ onChange, innerRef }: SelectProps): ReactElement => {
 
    return (
       <div className="select-container">
-         <label>Choose language</label>
+         <label>Choose programming language</label>
          <select
             onChange={onChange}
             defaultValue={'Select language'}
