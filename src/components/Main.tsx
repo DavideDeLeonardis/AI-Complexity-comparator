@@ -12,6 +12,8 @@ import ErrorMessage from './ErrorMessage';
 import Loading from './Loading';
 
 import useOpenAI from '../hooks/useOpenAI';
+import useFunctionsObjExtraction from '../hooks/useFunctionsObjExtraction';
+
 import {
    checkInputsAreValid,
    convertRawResponseInArray,
@@ -20,7 +22,6 @@ import {
 import {
    InputFunctionsInserted,
    OpenAIProps,
-   FunctionInserted,
    FinalResponse,
 } from '../types-interfaces';
 
@@ -38,6 +39,7 @@ const Main = (): ReactElement => {
       });
    const [rawResponse, setRawResponse] = useState<string | null>(null);
    const [finalResponse, setFinalResponse] = useState<FinalResponse>(null);
+   const [funcOneObj, funcTwoObj] = useFunctionsObjExtraction(finalResponse);
    const [inputsAreValid, setInputsAreValid] = useState<boolean>(true);
    const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -54,6 +56,7 @@ const Main = (): ReactElement => {
          setLanguage('');
          return;
       }
+      setFinalResponse(null);
 
       try {
          const { inputFuncOne, inputFuncTwo } = functionsInserted;
@@ -61,8 +64,6 @@ const Main = (): ReactElement => {
          if (checkInputsAreValid(inputFuncOne, inputFuncTwo))
             setInputsAreValid(true);
          else setInputsAreValid(false);
-
-         setFinalResponse(null);
 
          await useOpenAI({
             functionsInserted: { inputFuncOne, inputFuncTwo },
@@ -107,16 +108,6 @@ const Main = (): ReactElement => {
          }
    }, [rawResponse]);
 
-   // Extract FunctionInserted objects with type checking
-   const [funcOneObj, funcTwoObj] = (() => {
-      try {
-         if (finalResponse !== null && Array.isArray(finalResponse))
-            return finalResponse as FunctionInserted[];
-         else return [] as FunctionInserted[];
-      } catch {
-         return [] as FunctionInserted[];
-      }
-   })();
    finalResponse && console.log(funcOneObj, funcTwoObj);
 
    return (
