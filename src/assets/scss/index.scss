@@ -30,7 +30,7 @@ main {
 
       select {
          padding: 10px;
-         font-size: 16px;
+         font-size: 15.5px;
          border: 1px solid #ccc;
          border-radius: 4px;
          cursor: pointer;
@@ -75,13 +75,17 @@ main {
       }
    }
 
-   .loading {
+   .loading,
+   .error {
       width: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		gap: 20px;
-      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 30px;
+   }
+
+   .loading {
+      gap: 20px;
 
       .fa-circle-notch {
          font-size: 2.5em;
@@ -97,6 +101,7 @@ main {
    }
 
    .error {
+      font-size: 1.35rem;
       color: red;
    }
 }

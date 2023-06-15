@@ -18,7 +18,7 @@ const ErrorMessage = ({
          {language === '' && 'Choose a language'}
          {!inputsAreValid && 'Insert 2 valid functions.'}
          {finalResponse === 'SOMETHING WENT WRONG' &&
-            'Something went wrong! Check language inserted and retry.'}
+            'Something went wrong! Check language and functions inserted and retry.'}
       </div>
    );
 };
