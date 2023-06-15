@@ -12,7 +12,6 @@ import ErrorMessage from './ErrorMessage';
 import Loading from './Loading';
 
 import useOpenAI from '../hooks/useOpenAI';
-import useFunctionsObjExtraction from '../hooks/useFunctionsObjExtraction';
 
 import {
    checkInputsAreValid,
@@ -41,7 +40,6 @@ const Main = (): ReactElement => {
       });
    const [rawResponse, setRawResponse] = useState<string | null>(null);
    const [finalResponse, setFinalResponse] = useState<FinalResponse>(null);
-   const [funcOneObj, funcTwoObj] = useFunctionsObjExtraction(finalResponse);
    const [inputsAreValid, setInputsAreValid] = useState<boolean>(true);
    const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -111,8 +109,6 @@ const Main = (): ReactElement => {
          }
    }, [rawResponse]);
 
-   console.log(funcOneObj, funcTwoObj);
-
    const outputs =
       !isLoading &&
       Array.isArray(finalResponse) &&
@@ -130,7 +126,7 @@ const Main = (): ReactElement => {
             innerRef={selectRef}
          />
 
-         <div className="inputs">
+         <section className="inputs">
             <Textarea
                onChange={(e) =>
                   setFunctionsInserted({
@@ -152,7 +148,7 @@ const Main = (): ReactElement => {
                onKeyDown={handleKeyPress}
                isLoading={isLoading}
             />
-         </div>
+         </section>
 
          <button
             className="compare"
