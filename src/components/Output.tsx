@@ -11,11 +11,7 @@ const Output = ({ funcObj }: { funcObj: FunctionInserted }): ReactElement => {
             {' }'} :
          </div>
          <u>{funcObj.complexity}</u>
-         <div className="is-faster">
-            {funcObj.isFaster == true
-               ? `Function { ${funcObj.name} } is faster.`
-               : `Function { ${funcObj.name} } is slower.`}
-         </div>
+         <div className="is-faster">{funcObj.isFaster && 'FASTER!'}</div>
       </div>
    );
 };

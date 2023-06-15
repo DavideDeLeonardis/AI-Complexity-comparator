@@ -61,16 +61,15 @@ main {
       }
    }
 
-   .outputs {
-      .output {
-         .complexity-label {
-            display: inline;
-            padding-right: 20px;
-         }
+   .output {
+      .complexity-label {
+         display: inline;
+         padding-right: 20px;
+      }
 
-         .is-faster {
-            margin-top: 15px;
-         }
+      .is-faster {
+			text-align: center;
+         margin-top: 15px;
       }
    }
 
@@ -114,7 +113,14 @@ main {
    }
 
    .error {
-      font-size: 1.35rem;
+      display: flex;
+      flex-direction: column;
+      font-size: 1.25rem;
       color: red;
+
+      .fa-xmark {
+         font-size: 2rem;
+         margin-bottom: 10px;
+      }
    }
 }
