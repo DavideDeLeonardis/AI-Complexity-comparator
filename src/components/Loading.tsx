@@ -6,10 +6,12 @@ interface LoadingProps {
    isLoading: boolean;
 }
 
-const Loading = ({ isLoading }: LoadingProps): ReactElement => (
-   <div className="loading">
-      {isLoading && <FontAwesomeIcon icon={faCircleNotch} />}
-   </div>
-);
+const Loading = ({ isLoading }: LoadingProps): ReactElement | null => {
+   return isLoading ? (
+      <div className="loading">
+         <FontAwesomeIcon icon={faCircleNotch} />
+      </div>
+   ) : null;
+};
 
 export default Loading;
