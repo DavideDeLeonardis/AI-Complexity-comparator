@@ -111,7 +111,14 @@ const Main = (): ReactElement => {
          }
    }, [rawResponse]);
 
-   console.log(finalResponse);
+   console.log(funcOneObj, funcTwoObj);
+
+   const outputs =
+      !isLoading &&
+      Array.isArray(finalResponse) &&
+      finalResponse.map((funcObj: FunctionInserted, key) => (
+         <Output key={key} funcObj={funcObj} />
+      ));
 
    return (
       <main>
@@ -155,13 +162,7 @@ const Main = (): ReactElement => {
             Compare
          </button>
 
-         {!isLoading && Array.isArray(finalResponse) && (
-            <div className="outputs">
-               {finalResponse.map((funcObj: FunctionInserted, key) => (
-                  <Output key={key} funcObj={funcObj} />
-               ))}
-            </div>
-         )}
+         {finalResponse && <div className="outputs">{outputs}</div>}
 
          <Loading isLoading={isLoading} />
 
