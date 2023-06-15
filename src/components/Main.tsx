@@ -23,6 +23,7 @@ import {
    InputFunctionsInserted,
    OpenAIProps,
    FinalResponse,
+   FunctionInserted,
 } from '../types-interfaces';
 import Output from './Output';
 
@@ -110,7 +111,7 @@ const Main = (): ReactElement => {
          }
    }, [rawResponse]);
 
-   console.log(funcOneObj, funcTwoObj);
+   console.log(finalResponse);
 
    return (
       <main>
@@ -154,20 +155,21 @@ const Main = (): ReactElement => {
             Compare
          </button>
 
-         {!isLoading && (
+         {!isLoading && Array.isArray(finalResponse) && (
             <div className="outputs">
-               <Output funcObj={funcOneObj} />
-               <Output funcObj={funcTwoObj} />
+               {finalResponse.map((funcObj: FunctionInserted, key) => (
+                  <Output key={key} funcObj={funcObj} />
+               ))}
             </div>
          )}
+
+         <Loading isLoading={isLoading} />
 
          <ErrorMessage
             inputsAreValid={inputsAreValid}
             finalResponse={finalResponse}
             language={language}
          />
-
-         <Loading isLoading={isLoading} />
       </main>
    );
 };
