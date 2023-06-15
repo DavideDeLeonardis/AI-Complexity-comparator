@@ -24,6 +24,7 @@ import {
    OpenAIProps,
    FinalResponse,
 } from '../types-interfaces';
+import Output from './Output';
 
 const Main = (): ReactElement => {
    // Define refs and focus textarea when the page loads
@@ -82,6 +83,7 @@ const Main = (): ReactElement => {
    useEffect(() => {
       if (rawResponse)
          try {
+            // Created BEFORE OpenAI model could output results in JSON format
             const convertedResponse: FinalResponse =
                convertRawResponseInArray<FinalResponse>(rawResponse);
 
@@ -108,6 +110,8 @@ const Main = (): ReactElement => {
          }
    }, [rawResponse]);
 
+   console.log(funcOneObj, funcTwoObj);
+
    return (
       <main>
          <Select
@@ -118,7 +122,7 @@ const Main = (): ReactElement => {
             innerRef={selectRef}
          />
 
-         <div className="inputs-container">
+         <div className="inputs">
             <Textarea
                onChange={(e) =>
                   setFunctionsInserted({
@@ -127,7 +131,6 @@ const Main = (): ReactElement => {
                   })
                }
                onKeyDown={handleKeyPress}
-               // complexity={funcOneObj ? funcOneObj.complexity : ''}
                isLoading={isLoading}
                innerRef={textAreaRef}
             />
@@ -139,7 +142,6 @@ const Main = (): ReactElement => {
                   })
                }
                onKeyDown={handleKeyPress}
-               // complexity={funcTwoObj ? funcTwoObj.complexity : ''}
                isLoading={isLoading}
             />
          </div>
@@ -151,6 +153,13 @@ const Main = (): ReactElement => {
          >
             Compare
          </button>
+
+         {!isLoading && (
+            <div className="outputs">
+               <Output funcObj={funcOneObj} />
+               <Output funcObj={funcTwoObj} />
+            </div>
+         )}
 
          <ErrorMessage
             inputsAreValid={inputsAreValid}

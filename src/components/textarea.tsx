@@ -22,7 +22,6 @@ const Textarea = ({
             onKeyDown={onKeyDown}
             disabled={isLoading}
          />
-         {/* {!isLoading && <div>{complexity}</div>} */}
       </div>
    );
 };

@@ -12,15 +12,17 @@ const ErrorMessage = ({
    inputsAreValid,
    finalResponse,
    language,
-}: ErrorProps): ReactElement => {
-   return (
-      <div className="error">
-         {language === '' && 'Choose a language'}
-         {!inputsAreValid && 'Insert 2 valid functions.'}
-         {finalResponse === 'SOMETHING WENT WRONG' &&
-            'Something went wrong! Check language and functions inserted and retry.'}
-      </div>
-   );
+}: ErrorProps): ReactElement | null => {
+   const outputError = (): string | undefined => {
+      if (language === '' && inputsAreValid)
+         return 'Choose a language and insert 2 valid functions';
+      if (language === '') return 'Choose a language';
+      if (!inputsAreValid) return 'Insert 2 valid functions';
+      if (finalResponse === 'SOMETHING WENT WRONG')
+         return 'Something went wrong! Check language and functions inserted and retry';
+   };
+
+   return <div className="error">{outputError()}</div>;
 };
 
 export default ErrorMessage;

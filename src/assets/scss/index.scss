@@ -37,26 +37,39 @@ main {
       }
    }
 
-   .inputs-container {
+   .inputs,
+   .outputs {
       display: flex;
-      gap: 10px;
+      justify-content: space-around;
       margin-top: 50px;
-      text-align: center;
+      gap: 10px;
+   }
 
-      .input-container {
+   .inputs .input-container {
+      width: 100%;
+
+      textarea {
          width: 100%;
-         text-align: center;
+         height: 300px;
+         margin-bottom: 20px;
+         padding: 10px;
+         font-size: 14px;
+         border: 1px solid #ccc;
+         border-radius: 4px;
+         resize: none;
+         outline: none;
+      }
+   }
 
-         textarea {
-            width: 100%;
-            height: 300px;
-            margin-bottom: 20px;
-            padding: 10px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            resize: none;
-            outline: none;
+   .outputs {
+      .output {
+         .complexity-label {
+            display: inline;
+            padding-right: 20px;
+         }
+
+         .is-faster {
+            margin-top: 15px;
          }
       }
    }
