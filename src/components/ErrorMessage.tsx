@@ -1,4 +1,6 @@
 import { ReactElement } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 import { FinalResponse } from '../types-interfaces';
 
@@ -22,7 +24,12 @@ const ErrorMessage = ({
          return 'Something went wrong! Check language and functions inserted and retry';
    };
 
-   return <div className="error">{outputError()}</div>;
+   return (
+      <div className="error">
+         {outputError() && <FontAwesomeIcon icon={faXmark} />}
+         {outputError()}
+      </div>
+   );
 };
 
 export default ErrorMessage;
