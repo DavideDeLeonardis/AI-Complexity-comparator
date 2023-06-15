@@ -2,7 +2,11 @@ import { ReactElement } from 'react';
 
 import { FunctionInserted } from '../types-interfaces';
 
-const Output = ({ funcObj }: { funcObj: FunctionInserted }): ReactElement => {
+interface OutputProps {
+   funcObj: FunctionInserted;
+}
+
+const Output = ({ funcObj }: OutputProps): ReactElement => {
    return (
       <div className="output">
          <div className="complexity-label">

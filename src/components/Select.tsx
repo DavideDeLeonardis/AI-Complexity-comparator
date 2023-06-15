@@ -1,11 +1,10 @@
-import { ReactElement, ChangeEvent, RefObject } from 'react';
+import { ReactElement, ChangeEvent } from 'react';
 
 interface SelectProps {
    onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
-   innerRef?: RefObject<HTMLSelectElement>;
 }
 
-const Select = ({ onChange, innerRef }: SelectProps): ReactElement => {
+const Select = ({ onChange }: SelectProps): ReactElement => {
    const optionsList = [
       'JavaScript',
       'TypeScript',
@@ -39,11 +38,7 @@ const Select = ({ onChange, innerRef }: SelectProps): ReactElement => {
    return (
       <div className="select-container">
          <label>Choose programming language</label>
-         <select
-            onChange={onChange}
-            defaultValue={'Select language'}
-            ref={innerRef}
-         >
+         <select onChange={onChange} defaultValue={'Select language'}>
             <option disabled>Select language</option>
             {options}
          </select>

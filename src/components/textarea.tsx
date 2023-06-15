@@ -8,10 +8,10 @@ interface TextareaProps {
 }
 
 const Textarea = ({
+   isLoading,
    onChange,
    onKeyDown,
    innerRef,
-   isLoading,
 }: TextareaProps): ReactElement => {
    return (
       <div className="input-container">

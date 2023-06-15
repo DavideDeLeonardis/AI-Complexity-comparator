@@ -6,8 +6,10 @@ import {
    KeyboardEvent,
 } from 'react';
 
+import Intro from './Intro';
 import Select from './Select';
 import Textarea from './Textarea';
+import Output from './Output';
 import ErrorMessage from './ErrorMessage';
 import Loading from './Loading';
 
@@ -24,14 +26,8 @@ import {
    FinalResponse,
    FunctionInserted,
 } from '../types-interfaces';
-import Output from './Output';
 
 const Main = (): ReactElement => {
-   // Define refs and focus textarea when the page loads
-   const selectRef = useRef<HTMLSelectElement>(null);
-   const textAreaRef = useRef<HTMLTextAreaElement>(null);
-   useEffect(() => textAreaRef.current?.focus(), []);
-
    const [language, setLanguage] = useState<string | null>(null);
    const [functionsInserted, setFunctionsInserted] =
       useState<InputFunctionsInserted>({
@@ -42,6 +38,10 @@ const Main = (): ReactElement => {
    const [finalResponse, setFinalResponse] = useState<FinalResponse>(null);
    const [inputsAreValid, setInputsAreValid] = useState<boolean>(true);
    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+   // Focus textarea when the page loads
+   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+   useEffect(() => textAreaRef.current?.focus(), []);
 
    // Execute validateAndCompareFunctions() on pressing {{ Command / Control + Enter }} keys
    const handleKeyPress = (e: KeyboardEvent): void => {
@@ -118,12 +118,13 @@ const Main = (): ReactElement => {
 
    return (
       <main>
+         <Intro />
+
          <Select
             onChange={(e) => {
                setLanguage(e.target.value);
                textAreaRef.current?.focus();
             }}
-            innerRef={selectRef}
          />
 
          <section className="inputs">
