@@ -23,8 +23,8 @@ import {
 import {
    InputFunctionsInserted,
    OpenAIProps,
-   FinalResponse,
    FunctionInserted,
+   FinalResponse,
 } from '../types-interfaces';
 
 const Main = (): ReactElement => {
@@ -38,10 +38,7 @@ const Main = (): ReactElement => {
    const [finalResponse, setFinalResponse] = useState<FinalResponse>(null);
    const [inputsAreValid, setInputsAreValid] = useState<boolean>(true);
    const [isLoading, setIsLoading] = useState<boolean>(false);
-
-   // Focus textarea when the page loads
    const textAreaRef = useRef<HTMLTextAreaElement>(null);
-   useEffect(() => textAreaRef.current?.focus(), []);
 
    // Execute validateAndCompareFunctions() on pressing {{ Command / Control + Enter }} keys
    const handleKeyPress = (e: KeyboardEvent): void => {
@@ -86,21 +83,20 @@ const Main = (): ReactElement => {
             const convertedResponse: FinalResponse =
                convertRawResponseInArray<FinalResponse>(rawResponse);
 
-            if (Array.isArray(convertedResponse)) {
-               convertISValuesToBoolean(convertedResponse);
-
-               if (
-                  !convertedResponse[0].isFunction ||
-                  !convertedResponse[1].isFunction
-               ) {
-                  setInputsAreValid(false);
-                  return;
-               }
-
-               setFinalResponse(convertedResponse);
-            } else {
+            if (!Array.isArray(convertedResponse))
                throw new Error('Parsing in array error');
+
+            convertISValuesToBoolean(convertedResponse);
+
+            if (
+               !convertedResponse[0].isFunction ||
+               !convertedResponse[1].isFunction
+            ) {
+               setInputsAreValid(false);
+               return;
             }
+
+            setFinalResponse(convertedResponse);
          } catch (e) {
             setFinalResponse('SOMETHING WENT WRONG');
             console.error(e);
