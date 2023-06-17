@@ -22,6 +22,7 @@ import {
    checkIfNotFunction,
    checkIfBothSameComplexity,
 } from '../utils/checkAndConvertFuncObj';
+
 import {
    InputFunctionsInserted,
    OpenAIProps,
@@ -48,7 +49,7 @@ const Main = (): ReactElement => {
          validateAndCompareFunctions();
    };
 
-   // Validate functions, make API call and set raw response (initial state)
+   // Validate inputs, make API call and set raw response (initial state)
    const validateAndCompareFunctions = async (): Promise<void> => {
       if (isLoading) return;
       if (!language) {
@@ -77,7 +78,8 @@ const Main = (): ReactElement => {
       }
    };
 
-   // Check if inputs are functions, convert initial raw response in [] and set new state
+   // Check if inputs are functions and have same complexity
+   // Convert initial raw response in [] and set new state
    useEffect(() => {
       if (rawResponse)
          try {
