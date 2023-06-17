@@ -19,6 +19,8 @@ import {
    checkInputsAreValid,
    convertRawResponseInArray,
    convertISValuesToBoolean,
+   checkIfNotFunction,
+   checkIfBothSameComplexity,
 } from '../utils';
 import {
    InputFunctionsInserted,
@@ -87,15 +89,9 @@ const Main = (): ReactElement => {
                throw new Error('Parsing in array error');
 
             convertISValuesToBoolean(convertedResponse);
-
-            if (
-               !convertedResponse[0].isFunction ||
-               !convertedResponse[1].isFunction
-            ) {
-               setInputsAreValid(false);
+            if (checkIfNotFunction(convertedResponse, setInputsAreValid))
                return;
-            }
-
+            checkIfBothSameComplexity(convertedResponse);
             setFinalResponse(convertedResponse);
          } catch (e) {
             setFinalResponse('SOMETHING WENT WRONG');

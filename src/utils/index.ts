@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from 'react';
 import { FunctionInserted, FinalResponse } from '../types-interfaces';
 
 const hasFunctionConstruct = (s: string): boolean => {
@@ -54,4 +55,29 @@ export const convertISValuesToBoolean = (
       });
 
    return arr;
+};
+
+export const checkIfNotFunction = (
+   arr: FinalResponse,
+   setInputsAreValid: Dispatch<SetStateAction<boolean>>
+): boolean | void => {
+   if (arr === null) return;
+
+   if (Array.isArray(arr))
+      if (!arr[0].isFunction || !arr[1].isFunction) {
+         setInputsAreValid(false);
+         return true;
+      }
+
+   return false;
+};
+
+export const checkIfBothSameComplexity = (
+   arr: FinalResponse
+): FinalResponse | void => {
+   if (arr === null) return;
+
+   if (Array.isArray(arr))
+      if (arr[0].complexity === arr[1].complexity)
+         arr.forEach((func) => (func.isFaster = false));
 };
