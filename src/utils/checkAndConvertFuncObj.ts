@@ -1,15 +1,17 @@
 import { Dispatch, SetStateAction } from 'react';
 import { FunctionInserted, FinalResponse } from '../types-interfaces';
 
-export const convertRawResponseInArray = <T>(rawResponse: string): T | null => {
+export const convertRawResponseInArray = (
+   rawResponse: string
+): FinalResponse | null => {
    const match = rawResponse.match(/```([\s\S]+?)```/);
 
    if (match) {
       const cleanedContent = match[1].replace(/'/g, '"');
 
       try {
-         const parsedArray: T = eval(cleanedContent);
-         if (Array.isArray(parsedArray)) return parsedArray;
+         const parsedArray = eval(cleanedContent);
+         if (Array.isArray(parsedArray)) return parsedArray as FinalResponse;
       } catch (error) {
          console.error('Error parsing extracted content: ', error);
       }

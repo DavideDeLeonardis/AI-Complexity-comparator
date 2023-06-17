@@ -83,7 +83,7 @@ const Main = (): ReactElement => {
          try {
             // Created BEFORE OpenAI model could output results in JSON format
             const convertedResponse: FinalResponse =
-               convertRawResponseInArray<FinalResponse>(rawResponse);
+               convertRawResponseInArray(rawResponse);
 
             if (!Array.isArray(convertedResponse))
                throw new Error('Parsing in array error');
