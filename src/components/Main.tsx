@@ -13,6 +13,7 @@ import Output from './Output';
 import ErrorMessage from './ErrorMessage';
 import Loading from './Loading';
 
+import useAccessibilty from '../hooks/useAccessibilty';
 import useOpenAI from '../hooks/useOpenAI';
 import useCheckInputsAreValid from '../hooks/useCheckInputsAreValid';
 
@@ -45,8 +46,7 @@ const Main = (): ReactElement => {
 
    // Execute validateAndCompareFunctions() on pressing {{ Command / Control + Enter }} keys
    const handleKeyPress = (e: KeyboardEvent): void => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter')
-         validateAndCompareFunctions();
+      useAccessibilty(e, validateAndCompareFunctions);
    };
 
    // Validate inputs, make API call and set raw response (initial state)
