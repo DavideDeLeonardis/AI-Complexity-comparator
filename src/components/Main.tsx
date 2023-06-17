@@ -14,14 +14,14 @@ import ErrorMessage from './ErrorMessage';
 import Loading from './Loading';
 
 import useOpenAI from '../hooks/useOpenAI';
+import useCheckInputsAreValid from '../hooks/useCheckInputsAreValid';
 
 import {
-   checkInputsAreValid,
    convertRawResponseInArray,
    convertISValuesToBoolean,
    checkIfNotFunction,
    checkIfBothSameComplexity,
-} from '../utils';
+} from '../utils/checkAndConvertFuncObj';
 import {
    InputFunctionsInserted,
    OpenAIProps,
@@ -60,7 +60,7 @@ const Main = (): ReactElement => {
       try {
          const { inputFuncOne, inputFuncTwo } = functionsInserted;
 
-         if (checkInputsAreValid(inputFuncOne, inputFuncTwo))
+         if (useCheckInputsAreValid(inputFuncOne, inputFuncTwo))
             setInputsAreValid(true);
          else setInputsAreValid(false);
 

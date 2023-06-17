@@ -1,28 +1,6 @@
 import { Dispatch, SetStateAction } from 'react';
 import { FunctionInserted, FinalResponse } from '../types-interfaces';
 
-const hasFunctionConstruct = (s: string): boolean => {
-   const regex = /.*/;
-   // /^(async\s+)?(const|function|func|def|let|\.\.\.)\s+\w+\s*=\s*(async\s*)?\([^)]*\)\s*(?::\s*\w+)?\s*=>\s*\{[^}]*\}\s*;?$/;
-
-   return regex.test(s);
-};
-
-export const checkInputsAreValid = (
-   funcOne: string,
-   funcTwo: string
-): boolean => {
-   const textareasAreEmpty: boolean =
-      funcOne.trim() === '' || funcTwo.trim() === '';
-   const textareaNotContainsFunctions: boolean =
-      !hasFunctionConstruct(funcOne) || !hasFunctionConstruct(funcTwo);
-
-   if (textareasAreEmpty || textareaNotContainsFunctions)
-      throw new Error('Inputs not valid');
-
-   return true;
-};
-
 export const convertRawResponseInArray = <T>(rawResponse: string): T | null => {
    const match = rawResponse.match(/```([\s\S]+?)```/);
 
@@ -68,8 +46,6 @@ export const checkIfNotFunction = (
          setInputsAreValid(false);
          return true;
       }
-
-   return false;
 };
 
 export const checkIfBothSameComplexity = (
