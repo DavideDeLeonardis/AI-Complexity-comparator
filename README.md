@@ -1,10 +1,6 @@
 # AI Complexity-comparator
 
-## OpenAI GPT-3.5 Model will analyze the time complexities of the functions inserted and provide a comprehensive comparison
-
-<br />
-
-## Insert the functions into the designated boxes and specify the programming languages used.
+## Insert the functions into the designated boxes and OpenAI GPT-3.5 Model will analyze and output the time complexities and provide a comprehensive comparison.
 
 <br />
 
