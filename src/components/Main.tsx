@@ -1,23 +1,24 @@
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState, useRef } from 'react';
 
 import Intro from './Intro';
 import Select from './Select';
 import Textareas from './Textareas/Textareas';
 import CompareButton from './CompareButton';
+import Loading from './Loading';
 import Outputs from './Outputs/Outputs';
 import ErrorMessage from './ErrorMessage';
-import Loading from './Loading';
 
 import useOpenAI from '../hooks/useOpenAI';
-import useCheckInputsNotEmpty from '../hooks/useCheckInputsNotEmpty';
+import useCheckInputsAreEmpty from '../hooks/useCheckInputsAreEmpty';
 import useConversionAndPropChecking from '../hooks/useConversionAndPropChecking';
 import useRefsAndScrollToElement from '../hooks/useRefsAndScrollToElement';
 
 import {
    InputFunctionsInserted,
-   OpenAIProps,
+   HandleSelectChange,
    CompareValidFunction,
    FinalResponse,
+   OpenAIProps,
 } from '../types-interfaces';
 
 const Main = (): ReactElement => {
@@ -33,12 +34,15 @@ const Main = (): ReactElement => {
    const [finalResponse, setFinalResponse] = useState<FinalResponse>(null);
    const [inputsAreValid, setInputsAreValid] = useState<boolean>(true);
    const [isLoading, setIsLoading] = useState<boolean>(false);
-   const { textAreaRef, loadingRef, outputsRef } = useRefsAndScrollToElement({
+   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+   // Handle the window scroll to an element
+   const { loadingRef, outputsRef } = useRefsAndScrollToElement({
       isLoading,
       finalResponse,
    });
 
-   // Functions to convert string response in array and validate its properties
+   // Functions to convert raw response in array and validate its properties
    const cF = useConversionAndPropChecking();
 
    const checkInsertedInputsConditions = (): boolean | void => {
@@ -57,7 +61,9 @@ const Main = (): ReactElement => {
       try {
          if (!initialConditionsAreMet) return;
 
-         useCheckInputsNotEmpty(inputFunctionsInserted, setInputsAreValid);
+         if (useCheckInputsAreEmpty(inputFunctionsInserted))
+            throw new Error('Inputs empty or not valid');
+         else setInputsAreValid(true);
 
          await useOpenAI({
             functionsInserted: inputFunctionsInserted,
@@ -114,16 +120,16 @@ const Main = (): ReactElement => {
       checkAndSetFinalResponse();
    }, [rawResponse]);
 
+   const handleSelectChange: HandleSelectChange = (e) => {
+      setLanguage(e.target.value);
+      textAreaRef.current?.focus();
+   };
+
    return (
       <main>
          <Intro />
 
-         <Select
-            onChange={(e) => {
-               setLanguage(e.target.value);
-               textAreaRef.current?.focus();
-            }}
-         />
+         <Select onChange={handleSelectChange} />
 
          <Textareas
             inputFunctionsInserted={inputFunctionsInserted}
