@@ -33,8 +33,9 @@ const Main = (): ReactElement => {
    const [finalResponse, setFinalResponse] = useState<FinalResponse>(null);
    const [inputsAreValid, setInputsAreValid] = useState<boolean>(true);
    const [isLoading, setIsLoading] = useState<boolean>(false);
-   const { textAreaRef, loadingRef, errorRef } = useRefsAndScrollToElement({
+   const { textAreaRef, loadingRef, outputsRef } = useRefsAndScrollToElement({
       isLoading,
+      finalResponse,
    });
 
    // Functions to convert string response in array and validate its properties
@@ -139,13 +140,16 @@ const Main = (): ReactElement => {
 
          <Loading isLoading={isLoading} innerRef={loadingRef} />
 
-         <Outputs finalResponse={finalResponse} isLoading={isLoading} />
+         <Outputs
+            finalResponse={finalResponse}
+            isLoading={isLoading}
+            innerRef={outputsRef}
+         />
 
          <ErrorMessage
             inputsAreValid={inputsAreValid}
             finalResponse={finalResponse}
             language={language}
-            innerRef={errorRef}
          />
       </main>
    );

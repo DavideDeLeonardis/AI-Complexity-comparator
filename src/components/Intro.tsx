@@ -8,14 +8,13 @@ const Intro = (): ReactElement => {
             designated boxes and specify the programming languages used.
          </h2>
          <p>
-            The comparator will analyze the time complexities of the functions
-            and provide a comprehensive comparison.{' '}
+            <span className="model">OpenAI GPT-3.5 Model</span> will analyze the
+            time complexities of the functions inserted and output a
+            comprehensive comparison.
          </p>
          <p>
-            - This comparator utilizes the{' '}
-            <span className="model">OpenAI GPT-3.5 Model</span> to generate
-            results for a wide range of functions written in various programming
-            languages.
+            - This comparator is able to generate results for a wide range of
+            functions written in various programming languages.
          </p>
       </section>
    );

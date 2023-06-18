@@ -1,20 +1,27 @@
 import { useEffect, useRef } from 'react';
 
+import { FinalResponse } from '../types-interfaces';
+
 interface useRefsProps {
    isLoading: boolean;
+   finalResponse: FinalResponse;
 }
 
-const useRefsAndScrollToElement = ({ isLoading }: useRefsProps) => {
+const useRefsAndScrollToElement = ({
+   isLoading,
+   finalResponse,
+}: useRefsProps) => {
    const textAreaRef = useRef<HTMLTextAreaElement>(null);
    const loadingRef = useRef<HTMLDivElement>(null);
-   const errorRef = useRef<HTMLDivElement>(null);
+   const outputsRef = useRef<HTMLDivElement>(null);
 
    useEffect(() => loadingRef.current?.scrollIntoView(), [isLoading]);
+   useEffect(() => outputsRef.current?.scrollIntoView(), [finalResponse]);
 
    return {
       textAreaRef,
       loadingRef,
-      errorRef,
+      outputsRef,
    };
 };
 

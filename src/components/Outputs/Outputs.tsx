@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactElement, RefObject } from 'react';
 
 import SingleOutput from './SingleOutput';
 
@@ -7,14 +7,16 @@ import { FinalResponse, FunctionInserted } from '../../types-interfaces';
 interface OutputsProps {
    finalResponse: FinalResponse;
    isLoading: boolean;
+   innerRef: RefObject<HTMLDivElement>;
 }
 
 const Outputs = ({
    finalResponse,
    isLoading,
+   innerRef,
 }: OutputsProps): ReactElement | null => {
    return !isLoading && Array.isArray(finalResponse) ? (
-      <div className="outputs">
+      <div className="outputs" ref={innerRef}>
          {finalResponse.map((funcObj: FunctionInserted, key) => (
             <SingleOutput key={key} funcObj={funcObj} />
          ))}

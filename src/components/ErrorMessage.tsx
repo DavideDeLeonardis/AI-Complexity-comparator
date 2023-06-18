@@ -1,4 +1,4 @@
-import { ReactElement, RefObject } from 'react';
+import { ReactElement } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
@@ -8,14 +8,12 @@ interface ErrorProps {
    inputsAreValid: boolean | null;
    finalResponse: FinalResponse;
    language: string | null;
-   innerRef?: RefObject<HTMLDivElement>;
 }
 
 const ErrorMessage = ({
    inputsAreValid,
    finalResponse,
    language,
-   innerRef,
 }: ErrorProps): ReactElement | null => {
    const outputError = (): string => {
       if (language === '') return 'Choose a language';
@@ -26,10 +24,15 @@ const ErrorMessage = ({
       return '';
    };
 
-   return language === '' ||
+   outputError() && window.scrollTo(0, document.body.scrollHeight);
+
+   const errorShown =
+      language === '' ||
       !inputsAreValid ||
-      finalResponse === 'SOMETHING WENT WRONG' ? (
-      <div className="error" ref={innerRef}>
+      finalResponse === 'SOMETHING WENT WRONG';
+
+   return errorShown ? (
+      <div className="error">
          {outputError() && <FontAwesomeIcon icon={faXmark} />}
          {outputError()}
       </div>
