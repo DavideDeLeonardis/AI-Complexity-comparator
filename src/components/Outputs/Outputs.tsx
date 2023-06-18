@@ -2,7 +2,7 @@ import { ReactElement, RefObject } from 'react';
 
 import SingleOutput from './SingleOutput';
 
-import { FinalResponse, FunctionInserted } from '../../types-interfaces';
+import { FunctionInserted, FinalResponse } from '../../types-interfaces';
 
 interface OutputsProps {
    finalResponse: FinalResponse;

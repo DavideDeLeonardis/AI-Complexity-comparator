@@ -1,7 +1,9 @@
-import { ReactElement, ChangeEvent } from 'react';
+import { ReactElement } from 'react';
+
+import { HandleSelectChange } from '../types-interfaces';
 
 interface SelectProps {
-   onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
+   onChange: HandleSelectChange;
 }
 
 const Select = ({ onChange }: SelectProps): ReactElement => {

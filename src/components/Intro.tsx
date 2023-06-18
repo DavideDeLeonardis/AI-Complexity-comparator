@@ -16,6 +16,9 @@ const Intro = (): ReactElement => {
             - This comparator is able to generate results for a wide range of
             functions written in various programming languages.
          </p>
+         <p className="accessibility">
+            Accessibility: Press {'{{ Command / Control + Enter }}'} keys to compare
+         </p>
       </section>
    );
 };
