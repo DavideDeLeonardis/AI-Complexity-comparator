@@ -1,14 +1,9 @@
-import { Dispatch, SetStateAction } from 'react';
-
 import { FunctionInserted, FinalResponse } from '../types-interfaces';
 
 interface ConversionProps {
    convertRawResponseInArray: (rawResponse: string) => FinalResponse | null;
    convertISValuesToBoolean: (arr: FinalResponse) => FinalResponse | void;
-   checkIfNotFunction: (
-      arr: FinalResponse,
-      setInputsAreValid: Dispatch<SetStateAction<boolean>>
-   ) => boolean | void;
+   checkIfNotFunction: (arr: FinalResponse) => boolean | void;
    checkIfBothSameComplexity: (arr: FinalResponse) => FinalResponse | void;
 }
 
@@ -46,17 +41,11 @@ const convertISValuesToBoolean = (arr: FinalResponse): FinalResponse | void => {
    return arr;
 };
 
-const checkIfNotFunction = (
-   arr: FinalResponse,
-   setInputsAreValid: Dispatch<SetStateAction<boolean>>
-): boolean | void => {
+const checkIfNotFunction = (arr: FinalResponse): boolean | void => {
    if (arr === null) return;
 
    if (Array.isArray(arr))
-      if (!arr[0].isFunction || !arr[1].isFunction) {
-         setInputsAreValid(false);
-         return true;
-      }
+      if (!arr[0].isFunction || !arr[1].isFunction) return true;
 };
 
 const checkIfBothSameComplexity = (

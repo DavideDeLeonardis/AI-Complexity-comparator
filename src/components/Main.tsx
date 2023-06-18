@@ -44,7 +44,6 @@ const Main = (): ReactElement => {
          setLanguage('');
          return;
       }
-      setFinalResponse(null);
 
       return true;
    };
@@ -80,6 +79,7 @@ const Main = (): ReactElement => {
          throw new Error('Parsing in array error');
 
       cF.convertISValuesToBoolean(convertedResponse);
+      cF.checkIfBothSameComplexity(convertedResponse);
 
       return convertedResponse;
    };
@@ -92,9 +92,11 @@ const Main = (): ReactElement => {
             const convertedResponse =
                convertRawResponseInArray() as FinalResponse;
 
-            if (cF.checkIfNotFunction(convertedResponse, setInputsAreValid))
+            if (cF.checkIfNotFunction(convertedResponse)) {
+               setFinalResponse(null);
+               setInputsAreValid(false);
                return;
-            cF.checkIfBothSameComplexity(convertedResponse);
+            }
 
             setFinalResponse(convertedResponse);
          } catch (e) {
