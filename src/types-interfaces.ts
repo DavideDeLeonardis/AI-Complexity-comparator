@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 
 /**
  *
@@ -11,14 +11,9 @@ export type InputFunctionsInserted = {
    inputFuncTwo: string;
 };
 
-export type CompareValidFunction = () => Promise<void>;
+export type HandleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => void;
 
-export type FunctionInserted = {
-   isFunction: boolean | string;
-   name: string;
-   complexity: string;
-   isFaster: boolean | string;
-};
+export type CompareValidFunction = () => Promise<void>;
 
 export type FinalResponse =
    | [FunctionInserted, FunctionInserted]
@@ -30,6 +25,13 @@ export type FinalResponse =
  * INTERFACES
  *
  */
+
+export interface FunctionInserted {
+   isFunction: boolean | string;
+   name: string;
+   complexity: string;
+   isFaster: boolean | string;
+}
 
 export interface OpenAIProps {
    functionsInserted: InputFunctionsInserted;
