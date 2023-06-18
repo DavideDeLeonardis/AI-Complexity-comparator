@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from 'react';
 
 import { InputFunctionsInserted } from '../types-interfaces';
 
-const useCheckInputsAreValid = (
+const useCheckInputsNotEmpty = (
    { inputFuncOne, inputFuncTwo }: InputFunctionsInserted,
    setInputsAreValid: Dispatch<SetStateAction<boolean>>
 ): boolean | Error => {
@@ -29,4 +29,4 @@ const useCheckInputsAreValid = (
    return true;
 };
 
-export default useCheckInputsAreValid;
+export default useCheckInputsNotEmpty;

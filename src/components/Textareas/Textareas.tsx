@@ -10,14 +10,17 @@ import Textarea from './SingleTextarea';
 
 import useAccessibilty from '../../hooks/useAccessibilty';
 
-import { InputFunctionsInserted } from '../../types-interfaces';
+import {
+   CompareValidFunction,
+   InputFunctionsInserted,
+} from '../../types-interfaces';
 
 interface TextareasProps {
    inputFunctionsInserted: InputFunctionsInserted;
    setInputFunctionsInserted: Dispatch<SetStateAction<InputFunctionsInserted>>;
    isLoading: boolean;
    textAreaRef: RefObject<HTMLTextAreaElement>;
-   compareValidFunctions: () => Promise<void>;
+   compareValidFunctions: CompareValidFunction;
 }
 
 const Textareas = ({
@@ -28,9 +31,8 @@ const Textareas = ({
    compareValidFunctions,
 }: TextareasProps): ReactElement => {
    // Execute compareValidFunctions() on pressing {{ Command / Control + Enter }} keys
-   const handleKeyPress = (e: KeyboardEvent): void => {
+   const handleKeyPress = (e: KeyboardEvent): void =>
       useAccessibilty(e, compareValidFunctions);
-   };
 
    return (
       <section className="inputs">

@@ -6,6 +6,13 @@ import { Dispatch, SetStateAction } from 'react';
  *
  */
 
+export type InputFunctionsInserted = {
+   inputFuncOne: string;
+   inputFuncTwo: string;
+};
+
+export type CompareValidFunction = () => Promise<void>;
+
 export type FunctionInserted = {
    isFunction: boolean | string;
    name: string;
@@ -23,11 +30,6 @@ export type FinalResponse =
  * INTERFACES
  *
  */
-
-export interface InputFunctionsInserted {
-   inputFuncOne: string;
-   inputFuncTwo: string;
-}
 
 export interface OpenAIProps {
    functionsInserted: InputFunctionsInserted;

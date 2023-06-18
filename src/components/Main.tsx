@@ -3,29 +3,26 @@ import { ReactElement, useEffect, useState, useRef } from 'react';
 import Intro from './Intro';
 import Select from './Select';
 import Textareas from './Textareas/Textareas';
+import CompareButton from './CompareButton';
 import Output from './Output';
 import ErrorMessage from './ErrorMessage';
 import Loading from './Loading';
 
 import useOpenAI from '../hooks/useOpenAI';
 import useCheckInputsNotEmpty from '../hooks/useCheckInputsNotEmpty';
-
-import {
-   convertRawResponseInArray,
-   convertISValuesToBoolean,
-   checkIfNotFunction,
-   checkIfBothSameComplexity,
-} from '../utils/checkAndConvertFuncObj';
+import useConversionAndPropChecking from '../hooks/useConversionAndPropChecking';
 
 import {
    InputFunctionsInserted,
    OpenAIProps,
+   CompareValidFunction,
    FunctionInserted,
    FinalResponse,
 } from '../types-interfaces';
-import CompareButton from './CompareButton';
 
 const Main = (): ReactElement => {
+   // Created BEFORE OpenAI model could output results in JSON format
+
    const [language, setLanguage] = useState<string | null>(null);
    const [inputFunctionsInserted, setInputFunctionsInserted] =
       useState<InputFunctionsInserted>({
@@ -38,7 +35,10 @@ const Main = (): ReactElement => {
    const [isLoading, setIsLoading] = useState<boolean>(false);
    const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-   const checkInsertedInputsConditions = (): boolean | Error | void => {
+   // Functions to convert string response in array and validate its properties
+   const cF = useConversionAndPropChecking();
+
+   const checkInsertedInputsConditions = (): boolean | void => {
       if (isLoading) return;
       if (!language) {
          setLanguage('');
@@ -49,20 +49,20 @@ const Main = (): ReactElement => {
       return true;
    };
 
-   const compareValidFunctions = async (): Promise<void> => {
+   const compareValidFunctions: CompareValidFunction = async () => {
       const initialConditionsAreMet = checkInsertedInputsConditions();
 
       try {
-         if (initialConditionsAreMet) {
-            useCheckInputsNotEmpty(inputFunctionsInserted, setInputsAreValid);
+         if (!initialConditionsAreMet) return;
 
-            await useOpenAI({
-               functionsInserted: inputFunctionsInserted,
-               setRawResponse,
-               setIsLoading,
-               language,
-            } as OpenAIProps)();
-         }
+         useCheckInputsNotEmpty(inputFunctionsInserted, setInputsAreValid);
+
+         await useOpenAI({
+            functionsInserted: inputFunctionsInserted,
+            setRawResponse,
+            setIsLoading,
+            language,
+         } as OpenAIProps)();
       } catch (e) {
          setIsLoading(false);
          setInputsAreValid(false);
@@ -70,29 +70,42 @@ const Main = (): ReactElement => {
       }
    };
 
-   // Check if inputs are functions and have same complexity
-   // Convert initial raw response in [] and set new state
-   useEffect(() => {
+   const convertRawResponseInArray = (): FinalResponse | Error | void => {
       if (!rawResponse) return;
 
-      try {
-         // Created BEFORE OpenAI model could output results in JSON format
-         const convertedResponse: FinalResponse =
-            convertRawResponseInArray(rawResponse);
+      const convertedResponse: FinalResponse =
+         cF.convertRawResponseInArray(rawResponse);
 
-         if (!Array.isArray(convertedResponse))
-            throw new Error('Parsing in array error');
+      if (!Array.isArray(convertedResponse))
+         throw new Error('Parsing in array error');
 
-         convertISValuesToBoolean(convertedResponse);
-         if (checkIfNotFunction(convertedResponse, setInputsAreValid)) return;
-         checkIfBothSameComplexity(convertedResponse);
-         setFinalResponse(convertedResponse);
-      } catch (e) {
-         setFinalResponse('SOMETHING WENT WRONG');
-         console.error(e);
-      } finally {
-         setIsLoading(false);
-      }
+      cF.convertISValuesToBoolean(convertedResponse);
+
+      return convertedResponse;
+   };
+
+   useEffect(() => {
+      const checkAndSetFinalResponse = (): void => {
+         if (!rawResponse) return;
+
+         try {
+            const convertedResponse =
+               convertRawResponseInArray() as FinalResponse;
+
+            if (cF.checkIfNotFunction(convertedResponse, setInputsAreValid))
+               return;
+            cF.checkIfBothSameComplexity(convertedResponse);
+
+            setFinalResponse(convertedResponse);
+         } catch (e) {
+            setFinalResponse('SOMETHING WENT WRONG');
+            console.error(e);
+         } finally {
+            setIsLoading(false);
+         }
+      };
+
+      checkAndSetFinalResponse();
    }, [rawResponse]);
 
    const outputs =

@@ -1,14 +1,16 @@
 import { ReactElement } from 'react';
 
-interface CompareButton {
+import { CompareValidFunction } from '../types-interfaces';
+
+interface CompareButtonProps {
    isLoading: boolean;
-   compareValidFunctions: () => Promise<void>;
+   compareValidFunctions: CompareValidFunction;
 }
 
 const CompareButton = ({
    isLoading,
    compareValidFunctions,
-}: CompareButton): ReactElement => {
+}: CompareButtonProps): ReactElement => {
    return (
       <button
          className="compare"
