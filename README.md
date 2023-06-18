@@ -1,4 +1,4 @@
-# Complexity-comparator
+# AI Complexity-comparator
 
 ## OpenAI GPT-3.5 Model will analyze the time complexities of the functions inserted and provide a comprehensive comparison
 
