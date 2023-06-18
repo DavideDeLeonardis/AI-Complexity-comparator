@@ -1,21 +1,14 @@
-import {
-   ReactElement,
-   useEffect,
-   useState,
-   useRef,
-   KeyboardEvent,
-} from 'react';
+import { ReactElement, useEffect, useState, useRef } from 'react';
 
 import Intro from './Intro';
 import Select from './Select';
-import Textarea from './Textarea';
+import Textareas from './Textareas';
 import Output from './Output';
 import ErrorMessage from './ErrorMessage';
 import Loading from './Loading';
 
-import useAccessibilty from '../hooks/useAccessibilty';
 import useOpenAI from '../hooks/useOpenAI';
-import useCheckInputsAreValid from '../hooks/useCheckInputsAreValid';
+import useCheckInputsNotEmpty from '../hooks/useCheckInputsNotEmpty';
 
 import {
    convertRawResponseInArray,
@@ -30,10 +23,11 @@ import {
    FunctionInserted,
    FinalResponse,
 } from '../types-interfaces';
+import CompareButton from './CompareButton';
 
 const Main = (): ReactElement => {
    const [language, setLanguage] = useState<string | null>(null);
-   const [functionsInserted, setFunctionsInserted] =
+   const [inputFunctionsInserted, setInputFunctionsInserted] =
       useState<InputFunctionsInserted>({
          inputFuncOne: '',
          inputFuncTwo: '',
@@ -44,13 +38,7 @@ const Main = (): ReactElement => {
    const [isLoading, setIsLoading] = useState<boolean>(false);
    const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-   // Execute validateAndCompareFunctions() on pressing {{ Command / Control + Enter }} keys
-   const handleKeyPress = (e: KeyboardEvent): void => {
-      useAccessibilty(e, validateAndCompareFunctions);
-   };
-
-   // Validate inputs, make API call and set raw response (initial state)
-   const validateAndCompareFunctions = async (): Promise<void> => {
+   const checkInsertedInputsConditions = (): boolean | Error | void => {
       if (isLoading) return;
       if (!language) {
          setLanguage('');
@@ -58,19 +46,23 @@ const Main = (): ReactElement => {
       }
       setFinalResponse(null);
 
+      return true;
+   };
+
+   const compareValidFunctions = async (): Promise<void> => {
+      const initialConditionsAreMet = checkInsertedInputsConditions();
+
       try {
-         const { inputFuncOne, inputFuncTwo } = functionsInserted;
+         if (initialConditionsAreMet) {
+            useCheckInputsNotEmpty(inputFunctionsInserted, setInputsAreValid);
 
-         if (useCheckInputsAreValid(inputFuncOne, inputFuncTwo))
-            setInputsAreValid(true);
-         else setInputsAreValid(false);
-
-         await useOpenAI({
-            functionsInserted: { inputFuncOne, inputFuncTwo },
-            setRawResponse,
-            setIsLoading,
-            language,
-         } as OpenAIProps)();
+            await useOpenAI({
+               functionsInserted: inputFunctionsInserted,
+               setRawResponse,
+               setIsLoading,
+               language,
+            } as OpenAIProps)();
+         }
       } catch (e) {
          setIsLoading(false);
          setInputsAreValid(false);
@@ -81,26 +73,26 @@ const Main = (): ReactElement => {
    // Check if inputs are functions and have same complexity
    // Convert initial raw response in [] and set new state
    useEffect(() => {
-      if (rawResponse)
-         try {
-            // Created BEFORE OpenAI model could output results in JSON format
-            const convertedResponse: FinalResponse =
-               convertRawResponseInArray(rawResponse);
+      if (!rawResponse) return;
 
-            if (!Array.isArray(convertedResponse))
-               throw new Error('Parsing in array error');
+      try {
+         // Created BEFORE OpenAI model could output results in JSON format
+         const convertedResponse: FinalResponse =
+            convertRawResponseInArray(rawResponse);
 
-            convertISValuesToBoolean(convertedResponse);
-            if (checkIfNotFunction(convertedResponse, setInputsAreValid))
-               return;
-            checkIfBothSameComplexity(convertedResponse);
-            setFinalResponse(convertedResponse);
-         } catch (e) {
-            setFinalResponse('SOMETHING WENT WRONG');
-            console.error(e);
-         } finally {
-            setIsLoading(false);
-         }
+         if (!Array.isArray(convertedResponse))
+            throw new Error('Parsing in array error');
+
+         convertISValuesToBoolean(convertedResponse);
+         if (checkIfNotFunction(convertedResponse, setInputsAreValid)) return;
+         checkIfBothSameComplexity(convertedResponse);
+         setFinalResponse(convertedResponse);
+      } catch (e) {
+         setFinalResponse('SOMETHING WENT WRONG');
+         console.error(e);
+      } finally {
+         setIsLoading(false);
+      }
    }, [rawResponse]);
 
    const outputs =
@@ -121,37 +113,18 @@ const Main = (): ReactElement => {
             }}
          />
 
-         <section className="inputs">
-            <Textarea
-               onChange={(e) =>
-                  setFunctionsInserted({
-                     ...functionsInserted,
-                     inputFuncOne: e.target.value,
-                  })
-               }
-               onKeyDown={handleKeyPress}
-               isLoading={isLoading}
-               innerRef={textAreaRef}
-            />
-            <Textarea
-               onChange={(e) =>
-                  setFunctionsInserted({
-                     ...functionsInserted,
-                     inputFuncTwo: e.target.value,
-                  })
-               }
-               onKeyDown={handleKeyPress}
-               isLoading={isLoading}
-            />
-         </section>
+         <Textareas
+            inputFunctionsInserted={inputFunctionsInserted}
+            setInputFunctionsInserted={setInputFunctionsInserted}
+            isLoading={isLoading}
+            textAreaRef={textAreaRef}
+            compareValidFunctions={compareValidFunctions}
+         />
 
-         <button
-            className="compare"
-            disabled={isLoading}
-            onClick={validateAndCompareFunctions}
-         >
-            Compare
-         </button>
+         <CompareButton
+            isLoading={isLoading}
+            compareValidFunctions={compareValidFunctions}
+         />
 
          {finalResponse && <div className="outputs">{outputs}</div>}
 

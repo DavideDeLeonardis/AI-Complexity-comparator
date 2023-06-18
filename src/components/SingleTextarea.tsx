@@ -1,6 +1,6 @@
 import { ReactElement, KeyboardEvent, ChangeEvent, RefObject } from 'react';
 
-interface TextareaProps {
+interface SingleTextareaProps {
    isLoading: boolean;
    onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
    onKeyDown: (e: KeyboardEvent<HTMLTextAreaElement>) => void | null;
@@ -12,7 +12,7 @@ const Textarea = ({
    onChange,
    onKeyDown,
    innerRef,
-}: TextareaProps): ReactElement => {
+}: SingleTextareaProps): ReactElement => {
    return (
       <div className="input-container">
          <textarea
