@@ -1,22 +1,22 @@
-import { ReactElement, useEffect, useState, useRef } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 
 import Intro from './Intro';
 import Select from './Select';
 import Textareas from './Textareas/Textareas';
 import CompareButton from './CompareButton';
-import Output from './Output';
+import Outputs from './Outputs/Outputs';
 import ErrorMessage from './ErrorMessage';
 import Loading from './Loading';
 
 import useOpenAI from '../hooks/useOpenAI';
 import useCheckInputsNotEmpty from '../hooks/useCheckInputsNotEmpty';
 import useConversionAndPropChecking from '../hooks/useConversionAndPropChecking';
+import useRefsAndScrollToElement from '../hooks/useRefsAndScrollToElement';
 
 import {
    InputFunctionsInserted,
    OpenAIProps,
    CompareValidFunction,
-   FunctionInserted,
    FinalResponse,
 } from '../types-interfaces';
 
@@ -33,7 +33,9 @@ const Main = (): ReactElement => {
    const [finalResponse, setFinalResponse] = useState<FinalResponse>(null);
    const [inputsAreValid, setInputsAreValid] = useState<boolean>(true);
    const [isLoading, setIsLoading] = useState<boolean>(false);
-   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+   const { textAreaRef, loadingRef, errorRef } = useRefsAndScrollToElement({
+      isLoading,
+   });
 
    // Functions to convert string response in array and validate its properties
    const cF = useConversionAndPropChecking();
@@ -65,6 +67,7 @@ const Main = (): ReactElement => {
       } catch (e) {
          setIsLoading(false);
          setInputsAreValid(false);
+         setFinalResponse(null);
          console.warn(e);
       }
    };
@@ -110,13 +113,6 @@ const Main = (): ReactElement => {
       checkAndSetFinalResponse();
    }, [rawResponse]);
 
-   const outputs =
-      !isLoading &&
-      Array.isArray(finalResponse) &&
-      finalResponse.map((funcObj: FunctionInserted, key) => (
-         <Output key={key} funcObj={funcObj} />
-      ));
-
    return (
       <main>
          <Intro />
@@ -141,14 +137,15 @@ const Main = (): ReactElement => {
             compareValidFunctions={compareValidFunctions}
          />
 
-         {finalResponse && <div className="outputs">{outputs}</div>}
+         <Loading isLoading={isLoading} innerRef={loadingRef} />
 
-         <Loading isLoading={isLoading} />
+         <Outputs finalResponse={finalResponse} isLoading={isLoading} />
 
          <ErrorMessage
             inputsAreValid={inputsAreValid}
             finalResponse={finalResponse}
             language={language}
+            innerRef={errorRef}
          />
       </main>
    );

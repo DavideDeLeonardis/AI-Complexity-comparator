@@ -1,12 +1,12 @@
 import { ReactElement } from 'react';
 
-import { FunctionInserted } from '../types-interfaces';
+import { FunctionInserted } from '../../types-interfaces';
 
 interface OutputProps {
    funcObj: FunctionInserted;
 }
 
-const Output = ({ funcObj }: OutputProps): ReactElement => {
+const SingleOutput = ({ funcObj }: OutputProps): ReactElement => {
    return (
       <div className="output">
          <div className="complexity-label">
@@ -20,4 +20,4 @@ const Output = ({ funcObj }: OutputProps): ReactElement => {
    );
 };
 
-export default Output;
+export default SingleOutput;

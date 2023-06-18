@@ -3,7 +3,7 @@ import { ReactElement } from 'react';
 const Header = (): ReactElement => {
    return (
       <header>
-         <h1>Algorithms Complexity Comparator</h1>
+         <h1>AI Algorithms Complexity Comparator</h1>
       </header>
    );
 };
