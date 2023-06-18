@@ -2,7 +2,7 @@ import { ReactElement, useEffect, useState, useRef } from 'react';
 
 import Intro from './Intro';
 import Select from './Select';
-import Textareas from './Textareas';
+import Textareas from './Textareas/Textareas';
 import Output from './Output';
 import ErrorMessage from './ErrorMessage';
 import Loading from './Loading';

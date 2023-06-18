@@ -8,9 +8,9 @@ import {
 
 import Textarea from './SingleTextarea';
 
-import useAccessibilty from '../hooks/useAccessibilty';
+import useAccessibilty from '../../hooks/useAccessibilty';
 
-import { InputFunctionsInserted } from '../types-interfaces';
+import { InputFunctionsInserted } from '../../types-interfaces';
 
 interface TextareasProps {
    inputFunctionsInserted: InputFunctionsInserted;
