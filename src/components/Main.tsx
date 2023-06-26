@@ -43,7 +43,7 @@ const Main = (): ReactElement => {
    });
 
    // Functions to convert raw response in array and validate its properties
-   const cF = useConversionAndPropChecking();
+   const utils = useConversionAndPropChecking();
 
    const checkInsertedInputsConditions = (): boolean | void => {
       if (isLoading) return;
@@ -79,17 +79,17 @@ const Main = (): ReactElement => {
       }
    };
 
-   const convertRawResponseInArray = (): FinalResponse | Error | void => {
+   const convertRawInFinalResponse = (): FinalResponse | Error | void => {
       if (!rawResponse) return;
 
       const convertedResponse: FinalResponse =
-         cF.convertRawResponseInArray(rawResponse);
+         utils.convertRawResponseInArray(rawResponse);
 
       if (!Array.isArray(convertedResponse))
          throw new Error('Parsing in array error');
 
-      cF.convertISValuesToBoolean(convertedResponse);
-      cF.checkIfBothSameComplexity(convertedResponse);
+      utils.convertISValuesToBoolean(convertedResponse);
+      utils.checkIfBothSameComplexity(convertedResponse);
 
       return convertedResponse;
    };
@@ -100,9 +100,9 @@ const Main = (): ReactElement => {
 
          try {
             const convertedResponse =
-               convertRawResponseInArray() as FinalResponse;
+               convertRawInFinalResponse() as FinalResponse;
 
-            if (cF.checkIfNotFunction(convertedResponse)) {
+            if (utils.checkIfNotFunction(convertedResponse)) {
                setFinalResponse(null);
                setInputsAreValid(false);
                return;
