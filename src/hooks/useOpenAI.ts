@@ -25,33 +25,32 @@ const useOpenAI = ({
             temperature: 0,
             messages: [
                {
-                  content: `You are an expert software engineer. Your job is to determine the time complexities of two functions written in ${language} and output the results in a given format written between triple backticks.`,
                   role: 'system',
+                  content: `You are an expert software engineer. Your job is to determine the time complexities of two functions written in ${language} and output the results in a given format written between triple backticks.`,
                },
                {
+                  role: 'user',
                   content:
                      'Determine the time complexities of two functions and set which one is faster. \n  Results must be outputted with this format: \n  ``` 	[{"isFunction": "{{ isFunctionBoolean }}", "name": "{{ functionName }}", "complexity": "{{ complexityOfTheFunction }}", "isFaster": "{{ isFasterBoolean }}",}, {"isFunction": "{{ isFunction }}", "name": "{{ functionName }}", "complexity": "{{ complexityOfTheFunction }}", "isFaster": "{{ isFasterBoolean }}"}]  ``` \n  Instead of {{ isFunctionBoolean }} write a boolean value true if the input inserted is an actual single programming language function, not a variable assigment and not formed with something before or after the function declaration, else write boolean false. \n Instead of {{ functionName }} write the actual string name of the function inserted. \n Instead of {{ complexityOfTheFunction }} write the actual string complexity of the function inserted. \n  Instead of {{ isFasterBoolean }} write a boolean value  determined by which function has the smallest time complexity, ad example if the first function takes less time to execute than the second one write true, otherwise write false. If both functions have the same complexity write false for each object. Count that the time complexity scale is O(1) < O(log n) < O(sqrt(n)) < O(n) < O(n log n) < O(n^2) < O(2^n) < O(n!) so if one time complexity is smaller than the next, is a faster complexity and set isFaster to true respect that function object. \n  Remember: output ONLY the content in the triple backticks without giving any other explanations or notes.',
-                  role: 'user',
                },
                {
-                  content: 'What are the two functions?',
                   role: 'assistant',
+                  content: 'What are the two functions?',
                },
                {
+                  role: 'user',
                   content: `
 							Remember: ouput ONLY the content in the triple backticks without giving any other explanations or notes. \n
 							The functions are: ${inputFuncOne} and ${inputFuncTwo}
 						`,
-                  role: 'user',
                },
             ],
          });
-
          const content = response.data.choices?.[0]?.message?.content;
          if (content) setRawResponse(content);
       } catch (e) {
-         setRawResponse('SOMETHING WENT WRONG');
-         console.error(e);
+         console.error(`Error in API call: ${e}`);
+         setRawResponse('SOMETHING WENT WRONG in API CALL!');
       } finally {
          setIsLoading(false);
       }
